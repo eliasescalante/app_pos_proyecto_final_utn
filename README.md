@@ -2,3 +2,5 @@
 aplicacion de escritorio para realizar un CRUD sobre una base de datos
 
 python, practica con Tkinter.
+
+![Texto alternativo](https://github.com/eliasescalante/app_proyecto_final_utn/blob/main/Capture.JPG)
