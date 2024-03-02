@@ -266,7 +266,7 @@ tree.heading("5", text="PROVEEDOR", anchor=W)
 tree.place(relx=0.5, y=480, anchor=S, relwidth=1)
 
 # Cargar imagen y agregarla a una etiqueta
-image = Image.open(r"C:\Users\yuens\Desktop\Ninja\FACULTAD - CURSOS\Curso PYTHON\UTN-E-LERANING\proyecto curso utn\1.JPG") 
+image = Image.open("1.JPG") 
 image = image.resize((200, 150))
 photo = ImageTk.PhotoImage(image)
 image_label = Label(app, image=photo)
@@ -275,7 +275,7 @@ image_label.place(x=580, y=25)
 
 # cargar logo en cada label
 #label 1
-image = Image.open(r"C:\Users\yuens\Desktop\Ninja\FACULTAD - CURSOS\Curso PYTHON\UTN-E-LERANING\proyecto curso utn\1.JPG")
+image = Image.open("1.JPG")
 image = image.resize((20, 20))
 photo = ImageTk.PhotoImage(image)
 image_label = Label(app, image=photo)
@@ -283,7 +283,7 @@ image_label.image = photo  # Esto es importante para evitar que la imagen se eli
 image_label.place(x=220, y=20)
 
 # label 2
-image = Image.open(r"C:\Users\yuens\Desktop\Ninja\FACULTAD - CURSOS\Curso PYTHON\UTN-E-LERANING\proyecto curso utn\1.JPG")
+image = Image.open("1.JPG")
 image = image.resize((20, 20)) 
 photo = ImageTk.PhotoImage(image)
 image_label = Label(app, image=photo)
@@ -291,7 +291,7 @@ image_label.image = photo  # Esto es importante para evitar que la imagen se eli
 image_label.place(x=220, y=50)
 
 # label 3
-image = Image.open(r"C:\Users\yuens\Desktop\Ninja\FACULTAD - CURSOS\Curso PYTHON\UTN-E-LERANING\proyecto curso utn\1.JPG")
+image = Image.open("1.JPG")
 image = image.resize((20, 20)) 
 photo = ImageTk.PhotoImage(image)
 image_label = Label(app, image=photo)
@@ -299,7 +299,7 @@ image_label.image = photo  # Esto es importante para evitar que la imagen se eli
 image_label.place(x=220, y=80)
 
 # label 4
-image = Image.open(r"C:\Users\yuens\Desktop\Ninja\FACULTAD - CURSOS\Curso PYTHON\UTN-E-LERANING\proyecto curso utn\1.JPG")
+image = Image.open("1.JPG")
 image = image.resize((20, 20)) 
 photo = ImageTk.PhotoImage(image)
 image_label = Label(app, image=photo)
@@ -307,7 +307,7 @@ image_label.image = photo  # Esto es importante para evitar que la imagen se eli
 image_label.place(x=220, y=110)
 
 # label 5
-image = Image.open(r"C:\Users\yuens\Desktop\Ninja\FACULTAD - CURSOS\Curso PYTHON\UTN-E-LERANING\proyecto curso utn\1.JPG")
+image = Image.open("1.JPG")
 image = image.resize((20, 20))
 photo = ImageTk.PhotoImage(image)
 image_label = Label(app, image=photo)
@@ -315,7 +315,7 @@ image_label.image = photo  # Esto es importante para evitar que la imagen se eli
 image_label.place(x=220, y=140)
 
 # label 6
-image = Image.open(r"C:\Users\yuens\Desktop\Ninja\FACULTAD - CURSOS\Curso PYTHON\UTN-E-LERANING\proyecto curso utn\1.JPG")
+image = Image.open("1.JPG")
 image = image.resize((20, 20)) 
 photo = ImageTk.PhotoImage(image)
 image_label = Label(app, image=photo)
