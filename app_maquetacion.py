@@ -10,11 +10,11 @@ from PIL import Image, ImageTk
 #############################################################################################
 
 def crear_base_datos():
-    # Conectar a la base de datos (si no existe, se creará)
+    # Conecto a la base de datos (si no existe, se creará)
     conexion = sqlite3.connect('basededatos.db')
     cursor = conexion.cursor()
 
-    # Crear tabla si no existe
+    # Creo tabla si no existe
     cursor.execute('''CREATE TABLE IF NOT EXISTS materiales (
                         id INTEGER PRIMARY KEY,
                         material TEXT NOT NULL,
@@ -24,11 +24,11 @@ def crear_base_datos():
                         stock INTEGER NOT NULL,
                         proveedor TEXT NOT NULL)''')
 
-    # Guardar los cambios y cerrar la conexión
+    # guardo los cambios y cerrar la conexión
     conexion.commit()
     conexion.close()
 
-#falta definir
+
 def imprimir_base_datos_inicio():
     # imprimo el detalle de la base de datos en un treeview()
     conexion = sqlite3.connect('basededatos.db')
@@ -57,22 +57,22 @@ def exportar_base():
     #esta funcion exporta a txt la base dando la opcion de elegir donde guardar el archivo
 
     print("Exportando base...")
-    # Pedir al usuario que seleccione la ubicación y el nombre del archivo
+    # Pido al usuario que seleccione la ubicación y el nombre del archivo
     file_path = filedialog.asksaveasfilename(defaultextension=".txt", filetypes=[("Archivos de texto", "*.txt")])
     
     if file_path:
-        # Conectar a la base de datos
+        # Conecto a la base de datos
         conexion = sqlite3.connect('basededatos.db')
         cursor = conexion.cursor()
 
-        # Obtener todos los registros de la tabla materiales
+        # Obtengo todos los registros de la tabla materiales
         cursor.execute("SELECT * FROM materiales")
         registros = cursor.fetchall()
 
-        # Cerrar la conexión
+        # Cierro la conexión
         conexion.close()
 
-        # Escribir los registros en el archivo de texto seleccionado por el usuario
+        # Escribo los registros en el archivo de texto seleccionado por el usuario
         with open(file_path, 'w') as file:
             for registro in registros:
                 file.write(str(registro) + '\n')
@@ -81,15 +81,13 @@ def exportar_base():
     else:
         print("Exportación cancelada.")
 
-
-
 # Función para mostrar la ayuda
 def mostrar_ayuda():
     # Mensaje de ayuda
     mensaje = """Esta es una aplicación realizada por elias  que muestra una maquetación básica de una interfaz gráfica utilizando Tkinter. 
     Puedes utilizar esta aplicación para gestionar una base de datos de materiales, donde puedes consultar, dar de alta, borrar y modificar registros.
     """
-    # Mostrar el mensaje de ayuda en una ventana emergente
+    # Muestro el mensaje de ayuda en una ventana emergente
     messagebox.showinfo("Ayuda", mensaje)
 
 # funcion para que no detone los botones
@@ -97,7 +95,7 @@ def accion_boton():
     pass
 
 def alta_registro():
-    # Recopilar la información ingresada por el usuario
+    # capturo la información ingresada por el usuario
     material = entry1.get()
     descripcion = entry2.get()
     precio_venta = float(entry3.get())
@@ -105,22 +103,41 @@ def alta_registro():
     stock = int(entry5.get())
     proveedor = entry6.get()
 
-    # Conectar a la base de datos
+    # conecto a la base de datos
     conexion = sqlite3.connect('basededatos.db')
     cursor = conexion.cursor()
 
-    # Insertar el nuevo registro en la tabla materiales
-    cursor.execute("INSERT INTO materiales (material, descripcion, precio_venta, precio_costo, stock, proveedor) VALUES (?, ?, ?, ?, ?, ?)",
-                (material, descripcion, precio_venta, precio_costo, stock, proveedor))
+    #utilizo el try  except para manejar posibles errores
+    try:
+        # Inserto el nuevo registro en la tabla materiales
+        cursor.execute("INSERT INTO materiales (material, descripcion, precio_venta, precio_costo, stock, proveedor) VALUES (?, ?, ?, ?, ?, ?)",
+                    (material, descripcion, precio_venta, precio_costo, stock, proveedor))
 
-    # Guardar los cambios y cerrar la conexión
-    conexion.commit()
-    conexion.close()
+        # guardo los cambios
+        conexion.commit()
 
-    # Mostrar mensaje de éxito
-    messagebox.showinfo("Alta de registro", "Registro agregado correctamente.")
+        # muestro el mensaje de éxito
+        messagebox.showinfo("Alta de registro", "Registro agregado correctamente.")
 
-    # Limpiar los campos de entrada después de agregar el registro
+        # obtengo el registro recién insertado
+        cursor.execute("SELECT * FROM materiales WHERE material = ?", (material,))
+        nuevo_registro = cursor.fetchone()
+
+        # limpio el Treeview
+        for record in tree.get_children():
+            tree.delete(record)
+
+        # inserto el nuevo registro en el Treeview
+        tree.insert('', 'end', values=nuevo_registro)
+
+    except sqlite3.Error as e:
+        messagebox.showerror("Error", f"No se pudo agregar el registro: {e}")
+
+    finally:
+        # cierro la conexión
+        conexion.close()
+
+    # Limpio los campos de entrada después de agregar el registro
     entry1.delete(0, END)
     entry2.delete(0, END)
     entry3.delete(0, END)
@@ -129,15 +146,15 @@ def alta_registro():
     entry6.delete(0, END)
 
 def consultar_registro():
-    # Obtener el texto ingresado en los campos de entrada
+    # Obtengo el texto ingresado en los campos de entrada
     material = entry1.get()
     descripcion = entry2.get()
 
-    # Conectar a la base de datos
+    # Conecto a la base de datos
     conexion = sqlite3.connect('basededatos.db')
     cursor = conexion.cursor()
 
-    # Realizar la consulta en función del texto ingresado
+    # Realizo la consulta en función del texto ingresado
     if material:
         cursor.execute("SELECT * FROM materiales WHERE material LIKE ?", ('%' + material + '%',))
     elif descripcion:
@@ -146,15 +163,15 @@ def consultar_registro():
         messagebox.showwarning("Consulta", "Debe ingresar al menos un criterio de búsqueda (Material o Descripción).")
         return
 
-    # Limpiar el treeview antes de agregar nuevos datos
+    # Limpio el treeview antes de agregar nuevos datos
     for record in tree.get_children():
         tree.delete(record)
 
-    # Insertar los resultados de la consulta en el treeview
+    # Inserto los resultados de la consulta en el treeview
     for row in cursor.fetchall():
         tree.insert('', 'end', values=row)
 
-    # Cerrar la conexión
+    # Cierro la conexión
     conexion.close()
 
 def borrar_registro():
@@ -186,36 +203,36 @@ def borrar_registro():
     entry1.delete(0, END)
 
 def modificar_registro():
-    # Obtener el material ingresado por el usuario
+    # obtengo el material ingresado por el usuario
     material = entry1.get()
 
-    # Obtener los valores ingresados por el usuario para los otros campos
+    # obtengo los valores ingresados por el usuario para los otros campos
     descripcion = entry2.get()
     precio_venta = entry3.get()
     precio_costo = entry4.get()
     stock = entry5.get()
     proveedor = entry6.get()
 
-    # Validar que se haya ingresado un material
+    # valido que se haya ingresado un material
     if not material:
         messagebox.showwarning("Modificar registro", "Debe ingresar el material del registro que desea modificar.")
         return
 
-    # Conectar a la base de datos
+    # conecto a la base de datos
     conexion = sqlite3.connect('basededatos.db')
     cursor = conexion.cursor()
 
     try:
-        # Verificar si el registro con el material proporcionado existe
+        # verifico si el registro con el material proporcionado existe
         cursor.execute("SELECT * FROM materiales WHERE material = ?", (material,))
         registro = cursor.fetchone()
 
         if registro:
-            # Construir la consulta SQL para actualizar el registro
+            # realizo la consulta SQL para actualizar el registro
             sql = "UPDATE materiales SET"
             values = []
 
-            # Agregar los campos que se van a modificar
+            # agrego los campos que se van a modificar
             if descripcion:
                 sql += " descripcion = ?,"
                 values.append(descripcion)
@@ -232,26 +249,35 @@ def modificar_registro():
                 sql += " proveedor = ?,"
                 values.append(proveedor)
 
-            # Eliminar la última coma y cerrar la consulta
+            # elimino la última coma y cierro la consulta
             sql = sql.rstrip(',') + " WHERE material = ?"
             values.append(material)
 
-            # Ejecutar la consulta para actualizar el registro
+            # ejecuto la consulta para actualizar el registro
             cursor.execute(sql, tuple(values))
             conexion.commit()
 
             messagebox.showinfo("Modificar registro", f"Registro con material '{material}' modificado correctamente.")
 
-            
+            # obtengo el registro modificado de la base de datos
+            cursor.execute("SELECT * FROM materiales WHERE material = ?", (material,))
+            registro_modificado = cursor.fetchone()
+
+            # limpio el Treeview
+            for record in tree.get_children():
+                tree.delete(record)
+
+            # inserto el registro modificado en el Treeview
+            tree.insert('', 'end', values=registro_modificado)
         else:
             messagebox.showerror("Error", f"No se encontró ningún registro para el material '{material}'.")
     except sqlite3.Error as e:
         messagebox.showerror("Error", f"No se pudo modificar el registro: {e}")
     finally:
-        # Cerrar la conexión
+        # cierro la conexión
         conexion.close()
 
-    # Limpiar los campos de entrada después de modificar el registro
+    # limpio los campos de entrada después de modificar el registro
     entry1.delete(0, END)
     entry2.delete(0, END)
     entry3.delete(0, END)
@@ -308,7 +334,7 @@ app.config(menu=menubar)
 
 # maquetacion de los widget
 
-# Crear y colocar los widgets Entry y Label uno por uno
+# Creo y coloco los widgets Entry y Label uno por uno
 label1 = Label(app, text="MATERIAL", background="white")
 label1.place(x=260, y=20)
 
