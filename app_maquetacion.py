@@ -263,7 +263,7 @@ tree.heading("5", text="PROVEEDOR", anchor=W)
 tree.place(relx=0.5, y=480, anchor=S, relwidth=1)
 
 # Cargar imagen y agregarla a una etiqueta
-image = Image.open(r"C:\Users\yuens\Desktop\Ninja\FACULTAD - CURSOS\Curso PYTHON\UTN-E-LERANING\proyecto curso utn\1.JPG")  # Cambia "icon.jpg" al nombre de tu imagen
+image = Image.open(r"C:\Users\yuens\Desktop\Ninja\FACULTAD - CURSOS\Curso PYTHON\UTN-E-LERANING\proyecto curso utn\1.JPG") 
 image = image.resize((200, 150))  # Cambia el tamaño de la imagen según sea necesario
 photo = ImageTk.PhotoImage(image)
 image_label = Label(app, image=photo)
@@ -280,8 +280,8 @@ image_label.image = photo  # Esto es importante para evitar que la imagen se eli
 image_label.place(x=220, y=20)
 
 # label 2
-image = Image.open(r"C:\Users\yuens\Desktop\Ninja\FACULTAD - CURSOS\Curso PYTHON\UTN-E-LERANING\proyecto curso utn\1.JPG")  # Cambia "icon.jpg" al nombre de tu imagen
-image = image.resize((20, 20))  # Cambia el tamaño de la imagen según sea necesario
+image = Image.open(r"C:\Users\yuens\Desktop\Ninja\FACULTAD - CURSOS\Curso PYTHON\UTN-E-LERANING\proyecto curso utn\1.JPG")
+image = image.resize((20, 20)) 
 photo = ImageTk.PhotoImage(image)
 image_label = Label(app, image=photo)
 image_label.image = photo  # Esto es importante para evitar que la imagen se elimine por el recolector de basura
@@ -289,7 +289,7 @@ image_label.place(x=220, y=50)
 
 # label 3
 image = Image.open(r"C:\Users\yuens\Desktop\Ninja\FACULTAD - CURSOS\Curso PYTHON\UTN-E-LERANING\proyecto curso utn\1.JPG")  # Cambia "icon.jpg" al nombre de tu imagen
-image = image.resize((20, 20))  # Cambia el tamaño de la imagen según sea necesario
+image = image.resize((20, 20)) 
 photo = ImageTk.PhotoImage(image)
 image_label = Label(app, image=photo)
 image_label.image = photo  # Esto es importante para evitar que la imagen se elimine por el recolector de basura
@@ -297,7 +297,7 @@ image_label.place(x=220, y=80)
 
 # label 4
 image = Image.open(r"C:\Users\yuens\Desktop\Ninja\FACULTAD - CURSOS\Curso PYTHON\UTN-E-LERANING\proyecto curso utn\1.JPG")  # Cambia "icon.jpg" al nombre de tu imagen
-image = image.resize((20, 20))  # Cambia el tamaño de la imagen según sea necesario
+image = image.resize((20, 20)) 
 photo = ImageTk.PhotoImage(image)
 image_label = Label(app, image=photo)
 image_label.image = photo  # Esto es importante para evitar que la imagen se elimine por el recolector de basura
@@ -305,7 +305,7 @@ image_label.place(x=220, y=110)
 
 # label 5
 image = Image.open(r"C:\Users\yuens\Desktop\Ninja\FACULTAD - CURSOS\Curso PYTHON\UTN-E-LERANING\proyecto curso utn\1.JPG")  # Cambia "icon.jpg" al nombre de tu imagen
-image = image.resize((20, 20))  # Cambia el tamaño de la imagen según sea necesario
+image = image.resize((20, 20))
 photo = ImageTk.PhotoImage(image)
 image_label = Label(app, image=photo)
 image_label.image = photo  # Esto es importante para evitar que la imagen se elimine por el recolector de basura
@@ -313,7 +313,7 @@ image_label.place(x=220, y=140)
 
 # label 6
 image = Image.open(r"C:\Users\yuens\Desktop\Ninja\FACULTAD - CURSOS\Curso PYTHON\UTN-E-LERANING\proyecto curso utn\1.JPG")  # Cambia "icon.jpg" al nombre de tu imagen
-image = image.resize((20, 20))  # Cambia el tamaño de la imagen según sea necesario
+image = image.resize((20, 20)) 
 photo = ImageTk.PhotoImage(image)
 image_label = Label(app, image=photo)
 image_label.image = photo  # Esto es importante para evitar que la imagen se elimine por el recolector de basura
