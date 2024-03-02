@@ -9,11 +9,11 @@ import tkinter.messagebox as messagebox
 #############################################################################################
 
 def crear_base_datos():
-    # Conecto la base de datos (si no existe, se creará)
+    # Conectar a la base de datos (si no existe, se creará)
     conexion = sqlite3.connect('basededatos.db')
     cursor = conexion.cursor()
 
-    # creo la tabla si no existe
+    # Crear tabla si no existe
     cursor.execute('''CREATE TABLE IF NOT EXISTS materiales (
                         id INTEGER PRIMARY KEY,
                         material TEXT NOT NULL,
@@ -23,7 +23,7 @@ def crear_base_datos():
                         stock INTEGER NOT NULL,
                         proveedor TEXT NOT NULL)''')
 
-    # guardo los cambios y cerrar la conexión
+    # Guardar los cambios y cerrar la conexión
     conexion.commit()
     conexion.close()
 
@@ -33,22 +33,22 @@ def exportar_base():
     #esta funcion exporta a txt la base dando la opcion de elegir donde guardar el archivo
 
     print("Exportando base...")
-    # pido al usuario que seleccione la ubicación y el nombre del archivo
+    # Pedir al usuario que seleccione la ubicación y el nombre del archivo
     file_path = filedialog.asksaveasfilename(defaultextension=".txt", filetypes=[("Archivos de texto", "*.txt")])
     
     if file_path:
-        # conecto la base de datos
+        # Conectar a la base de datos
         conexion = sqlite3.connect('basededatos.db')
         cursor = conexion.cursor()
 
-        # obtengo todos los registros de la tabla materiales
+        # Obtener todos los registros de la tabla materiales
         cursor.execute("SELECT * FROM materiales")
         registros = cursor.fetchall()
 
-        # cierro la conexión
+        # Cerrar la conexión
         conexion.close()
 
-        # escribo los registros en el archivo de texto seleccionado por el usuario
+        # Escribir los registros en el archivo de texto seleccionado por el usuario
         with open(file_path, 'w') as file:
             for registro in registros:
                 file.write(str(registro) + '\n')
@@ -65,15 +65,15 @@ def mostrar_ayuda():
     mensaje = """Esta es una aplicación realizada por elias  que muestra una maquetación básica de una interfaz gráfica utilizando Tkinter. 
     Puedes utilizar esta aplicación para gestionar una base de datos de materiales, donde puedes consultar, dar de alta, borrar y modificar registros.
     """
-    # muestro el mensaje de ayuda en una ventana emergente
+    # Mostrar el mensaje de ayuda en una ventana emergente
     messagebox.showinfo("Ayuda", mensaje)
 
+# funcion para que no detone los botones
 def accion_boton():
-    #función para que no rompa los botones
     pass
 
 def alta_registro():
-    # recopilo la información ingresada por el usuario
+    # Recopilar la información ingresada por el usuario
     material = entry1.get()
     descripcion = entry2.get()
     precio_venta = float(entry3.get())
@@ -81,22 +81,22 @@ def alta_registro():
     stock = int(entry5.get())
     proveedor = entry6.get()
 
-    # conecto a la base de datos
+    # Conectar a la base de datos
     conexion = sqlite3.connect('basededatos.db')
     cursor = conexion.cursor()
 
-    # inserto el nuevo registro en la tabla materiales
+    # Insertar el nuevo registro en la tabla materiales
     cursor.execute("INSERT INTO materiales (material, descripcion, precio_venta, precio_costo, stock, proveedor) VALUES (?, ?, ?, ?, ?, ?)",
                 (material, descripcion, precio_venta, precio_costo, stock, proveedor))
 
-    # guardo los cambios y cerrar la conexión
+    # Guardar los cambios y cerrar la conexión
     conexion.commit()
     conexion.close()
 
-    # muestro mensaje de éxito
+    # Mostrar mensaje de éxito
     messagebox.showinfo("Alta de registro", "Registro agregado correctamente.")
 
-    # limpio los campos de entrada después de agregar el registro
+    # Limpiar los campos de entrada después de agregar el registro
     entry1.delete(0, END)
     entry2.delete(0, END)
     entry3.delete(0, END)
@@ -105,15 +105,15 @@ def alta_registro():
     entry6.delete(0, END)
 
 def consultar_registro():
-    # obtengo el texto ingresado en los campos de entrada
+    # Obtener el texto ingresado en los campos de entrada
     material = entry1.get()
     descripcion = entry2.get()
 
-    # conecto la base de datos
+    # Conectar a la base de datos
     conexion = sqlite3.connect('basededatos.db')
     cursor = conexion.cursor()
 
-    # realizo la consulta en función del texto ingresado
+    # Realizar la consulta en función del texto ingresado
     if material:
         cursor.execute("SELECT * FROM materiales WHERE material LIKE ?", ('%' + material + '%',))
     elif descripcion:
@@ -122,24 +122,116 @@ def consultar_registro():
         messagebox.showwarning("Consulta", "Debe ingresar al menos un criterio de búsqueda (Material o Descripción).")
         return
 
-    # limpio el treeview antes de agregar nuevos datos
+    # Limpiar el treeview antes de agregar nuevos datos
     for record in tree.get_children():
         tree.delete(record)
 
-    # inserto los resultados de la consulta en el treeview
+    # Insertar los resultados de la consulta en el treeview
     for row in cursor.fetchall():
         tree.insert('', 'end', values=row)
 
-    # cierro la conexión
+    # Cerrar la conexión
     conexion.close()
 
-
-#falta definir ...
 def borrar_registro():
-    pass
-# falta definir
+    # obtengo el material ingresado por el usuario
+    material = entry1.get()
+
+    # valido que se haya ingresado un material
+    if not material:
+        messagebox.showwarning("Borrar registro", "Debe ingresar el material del registro que desea borrar.")
+        return
+
+    # conecto la base de datos
+    conexion = sqlite3.connect('basededatos.db')
+    cursor = conexion.cursor()
+
+    try:
+        # intento borrar el registro con el material proporcionado
+        cursor.execute("DELETE FROM materiales WHERE material = ?", (material,))
+        conexion.commit()
+        messagebox.showinfo("Borrar registro", f"Registro con material '{material}' eliminado correctamente.")
+    except sqlite3.Error as e:
+        # muestro un mensaje en caso de error
+        messagebox.showerror("Error", f"No se pudo borrar el registro: {e}")
+    finally:
+        # cierro la conexión
+        conexion.close()
+
+    # borro los campo de entrada después de borrar el registro
+    entry1.delete(0, END)
+
 def modificar_registro():
-    pass
+    # Obtener el material ingresado por el usuario
+    material = entry1.get()
+
+    # Obtener los valores ingresados por el usuario para los otros campos
+    descripcion = entry2.get()
+    precio_venta = entry3.get()
+    precio_costo = entry4.get()
+    stock = entry5.get()
+    proveedor = entry6.get()
+
+    # Validar que se haya ingresado un material
+    if not material:
+        messagebox.showwarning("Modificar registro", "Debe ingresar el material del registro que desea modificar.")
+        return
+
+    # Conectar a la base de datos
+    conexion = sqlite3.connect('basededatos.db')
+    cursor = conexion.cursor()
+
+    try:
+        # Verificar si el registro con el material proporcionado existe
+        cursor.execute("SELECT * FROM materiales WHERE material = ?", (material,))
+        registro = cursor.fetchone()
+
+        if registro:
+            # Construir la consulta SQL para actualizar el registro
+            sql = "UPDATE materiales SET"
+            values = []
+
+            # Agregar los campos que se van a modificar
+            if descripcion:
+                sql += " descripcion = ?,"
+                values.append(descripcion)
+            if precio_venta:
+                sql += " precio_venta = ?,"
+                values.append(float(precio_venta))
+            if precio_costo:
+                sql += " precio_costo = ?,"
+                values.append(float(precio_costo))
+            if stock:
+                sql += " stock = ?,"
+                values.append(float(stock))
+            if proveedor:
+                sql += " proveedor = ?,"
+                values.append(proveedor)
+
+            # Eliminar la última coma y cerrar la consulta
+            sql = sql.rstrip(',') + " WHERE material = ?"
+            values.append(material)
+
+            # Ejecutar la consulta para actualizar el registro
+            cursor.execute(sql, tuple(values))
+            conexion.commit()
+
+            messagebox.showinfo("Modificar registro", f"Registro con material '{material}' modificado correctamente.")
+        else:
+            messagebox.showerror("Error", f"No se encontró ningún registro para el material '{material}'.")
+    except sqlite3.Error as e:
+        messagebox.showerror("Error", f"No se pudo modificar el registro: {e}")
+    finally:
+        # Cerrar la conexión
+        conexion.close()
+
+    # Limpiar los campos de entrada después de modificar el registro
+    entry1.delete(0, END)
+    entry2.delete(0, END)
+    entry3.delete(0, END)
+    entry4.delete(0, END)
+    entry5.delete(0, END)
+    entry6.delete(0, END)
 
 
 
@@ -174,23 +266,23 @@ filemenu.add_command(label="Exportar base", command=exportar_base)
 # Ítem "Salir"
 filemenu.add_command(label="Salir", command=app.quit)
 
-# agrego el menú "Archivo" al menú principal
+# Añadir el menú "Archivo" al menú principal
 menubar.add_cascade(label="Archivo", menu=filemenu)
 
 # Menú de ayuda
 helpmenu = Menu(menubar, tearoff=False)
 helpmenu.add_command(label="Ayuda", command=mostrar_ayuda)
 
-# agrego el menú "Ayuda" al menú principal
+# Añadir el menú "Ayuda" al menú principal
 menubar.add_cascade(label="Ayuda", menu=helpmenu)
 
-# configuro la barra de menú
+# Configurar la barra de menú
 app.config(menu=menubar)
 
 
 # maquetacion de los widget
 
-# creo y coloco los widgets Entry y Label uno por uno
+# Crear y colocar los widgets Entry y Label uno por uno
 label1 = Label(app, text="MATERIAL", background="white")
 label1.place(x=260, y=20)
 
@@ -250,23 +342,25 @@ button4.place(x=500, y=200)
 
 # Treeview
 tree = ttk.Treeview(app)
-tree["columns"] = ("0", "1", "2", "3", "4", "5")
-tree.column("0", width=10, minwidth=150)  # Ajusté el ancho de las columnas
+tree["columns"] = ("#0", "1", "2", "3", "4", "5", "6")
+tree.column("#0", width=10, minwidth=150)  # Ajusté el ancho de las columnas
 tree.column("1", width=150, minwidth=150)
 tree.column("2", width=150, minwidth=150)
 tree.column("3", width=150, minwidth=150)
 tree.column("4", width=150, minwidth=150)
 tree.column("5", width=150, minwidth=150)
-tree.heading("0", text="MATERIAL", anchor=W)  # Cambié el texto de las cabeceras
-tree.heading("1", text="DESCRIPCION", anchor=W)
-tree.heading("2", text="PRECIO DE VENTA", anchor=W)
-tree.heading("3", text="PRECIO DE COSTO", anchor=W)
-tree.heading("4", text="STOCK", anchor=W)
-tree.heading("5", text="PROVEEDOR", anchor=W)
+tree.column("6", width=150, minwidth=150)
+tree.heading("#0", text="ID", anchor=W)  # Cambié el texto de las cabeceras
+tree.heading("1", text="MATERIAL", anchor=W)
+tree.heading("2", text="DESCRIPCION", anchor=W)
+tree.heading("3", text="PRECIO DE VENTA", anchor=W)
+tree.heading("4", text="PRECIO DE COSTO", anchor=W)
+tree.heading("5", text="STOCK", anchor=W)
+tree.heading("6", text="PROVEEDOR", anchor=W)
 tree.place(relx=0.5, y=480, anchor=S, relwidth=1)
 
-# cargo la imagen y la agrego a una etiqueta
-image = Image.open("1.JPG") 
+# Cargar imagen y agregarla a una etiqueta
+image = Image.open("1.JPG")
 image = image.resize((200, 150))
 photo = ImageTk.PhotoImage(image)
 image_label = Label(app, image=photo)
@@ -284,7 +378,7 @@ image_label.place(x=220, y=20)
 
 # label 2
 image = Image.open("1.JPG")
-image = image.resize((20, 20)) 
+image = image.resize((20, 20))
 photo = ImageTk.PhotoImage(image)
 image_label = Label(app, image=photo)
 image_label.image = photo  # Esto es importante para evitar que la imagen se elimine por el recolector de basura
@@ -292,7 +386,7 @@ image_label.place(x=220, y=50)
 
 # label 3
 image = Image.open("1.JPG")
-image = image.resize((20, 20)) 
+image = image.resize((20, 20))
 photo = ImageTk.PhotoImage(image)
 image_label = Label(app, image=photo)
 image_label.image = photo  # Esto es importante para evitar que la imagen se elimine por el recolector de basura
@@ -300,7 +394,7 @@ image_label.place(x=220, y=80)
 
 # label 4
 image = Image.open("1.JPG")
-image = image.resize((20, 20)) 
+image = image.resize((20, 20))
 photo = ImageTk.PhotoImage(image)
 image_label = Label(app, image=photo)
 image_label.image = photo  # Esto es importante para evitar que la imagen se elimine por el recolector de basura
@@ -316,7 +410,7 @@ image_label.place(x=220, y=140)
 
 # label 6
 image = Image.open("1.JPG")
-image = image.resize((20, 20)) 
+image = image.resize((20, 20))
 photo = ImageTk.PhotoImage(image)
 image_label = Label(app, image=photo)
 image_label.image = photo  # Esto es importante para evitar que la imagen se elimine por el recolector de basura
