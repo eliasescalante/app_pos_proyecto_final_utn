@@ -271,7 +271,7 @@ crear_base_datos()
 app.title("POS base de materiales")
 
 # seteo del tamaño de la ventana
-app.geometry("950x400")
+app.geometry("1100x400")
 
 #Seteo el fondo de la app
 app.configure(background="white")
