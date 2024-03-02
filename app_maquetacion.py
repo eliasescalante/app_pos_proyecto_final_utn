@@ -29,7 +29,25 @@ def crear_base_datos():
 
 #falta definir
 def imprimir_base_datos_inicio():
-    pass
+    # imprimo el detalle de la base de datos en un treeview()
+    conexion = sqlite3.connect('basededatos.db')
+    cursor  = conexion.cursor()
+
+    # Obtengo todos los registros de la tabla materiales
+    cursor.execute("SELECT * FROM materiales")
+    registros = cursor.fetchall()
+
+    #cierro la conexion  para que no quede abierta toda la vida
+    conexion.close()
+
+    # limpio los campos del treeview
+    for registros in tree.get_children():
+        tree.delete(registros)
+
+    # imprimo los registros de la base en el treeview
+    for row in registros:
+        tree.insert('', 'end', value=row)
+
 
 
 
@@ -363,6 +381,10 @@ tree.heading("4", text="PRECIO DE COSTO", anchor=W)
 tree.heading("5", text="STOCK", anchor=W)
 tree.heading("6", text="PROVEEDOR", anchor=W)
 tree.place(relx=0.5, y=480, anchor=S, relwidth=1)
+
+#imprimo la base  de datos en el treeview
+
+imprimir_base_datos_inicio()
 
 # Cargar imagen y agregarla a una etiqueta
 image = Image.open("1.JPG")
