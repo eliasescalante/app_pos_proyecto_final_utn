@@ -9,11 +9,11 @@ import tkinter.messagebox as messagebox
 #############################################################################################
 
 def crear_base_datos():
-    # Conectar a la base de datos (si no existe, se creará)
+    # Conecto la base de datos (si no existe, se creará)
     conexion = sqlite3.connect('basededatos.db')
     cursor = conexion.cursor()
 
-    # Crear tabla si no existe
+    # creo la tabla si no existe
     cursor.execute('''CREATE TABLE IF NOT EXISTS materiales (
                         id INTEGER PRIMARY KEY,
                         material TEXT NOT NULL,
@@ -23,7 +23,7 @@ def crear_base_datos():
                         stock INTEGER NOT NULL,
                         proveedor TEXT NOT NULL)''')
 
-    # Guardar los cambios y cerrar la conexión
+    # guardo los cambios y cerrar la conexión
     conexion.commit()
     conexion.close()
 
@@ -33,22 +33,22 @@ def exportar_base():
     #esta funcion exporta a txt la base dando la opcion de elegir donde guardar el archivo
 
     print("Exportando base...")
-    # Pedir al usuario que seleccione la ubicación y el nombre del archivo
+    # pido al usuario que seleccione la ubicación y el nombre del archivo
     file_path = filedialog.asksaveasfilename(defaultextension=".txt", filetypes=[("Archivos de texto", "*.txt")])
     
     if file_path:
-        # Conectar a la base de datos
+        # conecto la base de datos
         conexion = sqlite3.connect('basededatos.db')
         cursor = conexion.cursor()
 
-        # Obtener todos los registros de la tabla materiales
+        # obtengo todos los registros de la tabla materiales
         cursor.execute("SELECT * FROM materiales")
         registros = cursor.fetchall()
 
-        # Cerrar la conexión
+        # cierro la conexión
         conexion.close()
 
-        # Escribir los registros en el archivo de texto seleccionado por el usuario
+        # escribo los registros en el archivo de texto seleccionado por el usuario
         with open(file_path, 'w') as file:
             for registro in registros:
                 file.write(str(registro) + '\n')
@@ -65,7 +65,7 @@ def mostrar_ayuda():
     mensaje = """Esta es una aplicación realizada por elias  que muestra una maquetación básica de una interfaz gráfica utilizando Tkinter. 
     Puedes utilizar esta aplicación para gestionar una base de datos de materiales, donde puedes consultar, dar de alta, borrar y modificar registros.
     """
-    # Mostrar el mensaje de ayuda en una ventana emergente
+    # muestro el mensaje de ayuda en una ventana emergente
     messagebox.showinfo("Ayuda", mensaje)
 
 def accion_boton():
@@ -73,7 +73,7 @@ def accion_boton():
     pass
 
 def alta_registro():
-    # Recopilar la información ingresada por el usuario
+    # recopilo la información ingresada por el usuario
     material = entry1.get()
     descripcion = entry2.get()
     precio_venta = float(entry3.get())
@@ -81,22 +81,22 @@ def alta_registro():
     stock = int(entry5.get())
     proveedor = entry6.get()
 
-    # Conectar a la base de datos
+    # conecto a la base de datos
     conexion = sqlite3.connect('basededatos.db')
     cursor = conexion.cursor()
 
-    # Insertar el nuevo registro en la tabla materiales
+    # inserto el nuevo registro en la tabla materiales
     cursor.execute("INSERT INTO materiales (material, descripcion, precio_venta, precio_costo, stock, proveedor) VALUES (?, ?, ?, ?, ?, ?)",
                 (material, descripcion, precio_venta, precio_costo, stock, proveedor))
 
-    # Guardar los cambios y cerrar la conexión
+    # guardo los cambios y cerrar la conexión
     conexion.commit()
     conexion.close()
 
-    # Mostrar mensaje de éxito
+    # muestro mensaje de éxito
     messagebox.showinfo("Alta de registro", "Registro agregado correctamente.")
 
-    # Limpiar los campos de entrada después de agregar el registro
+    # limpio los campos de entrada después de agregar el registro
     entry1.delete(0, END)
     entry2.delete(0, END)
     entry3.delete(0, END)
@@ -105,15 +105,15 @@ def alta_registro():
     entry6.delete(0, END)
 
 def consultar_registro():
-    # Obtener el texto ingresado en los campos de entrada
+    # obtengo el texto ingresado en los campos de entrada
     material = entry1.get()
     descripcion = entry2.get()
 
-    # Conectar a la base de datos
+    # conecto la base de datos
     conexion = sqlite3.connect('basededatos.db')
     cursor = conexion.cursor()
 
-    # Realizar la consulta en función del texto ingresado
+    # realizo la consulta en función del texto ingresado
     if material:
         cursor.execute("SELECT * FROM materiales WHERE material LIKE ?", ('%' + material + '%',))
     elif descripcion:
@@ -122,22 +122,22 @@ def consultar_registro():
         messagebox.showwarning("Consulta", "Debe ingresar al menos un criterio de búsqueda (Material o Descripción).")
         return
 
-    # Limpiar el treeview antes de agregar nuevos datos
+    # limpio el treeview antes de agregar nuevos datos
     for record in tree.get_children():
         tree.delete(record)
 
-    # Insertar los resultados de la consulta en el treeview
+    # inserto los resultados de la consulta en el treeview
     for row in cursor.fetchall():
         tree.insert('', 'end', values=row)
 
-    # Cerrar la conexión
+    # cierro la conexión
     conexion.close()
 
 
 #falta definir ...
 def borrar_registro():
     pass
-
+# falta definir
 def modificar_registro():
     pass
 
@@ -174,23 +174,23 @@ filemenu.add_command(label="Exportar base", command=exportar_base)
 # Ítem "Salir"
 filemenu.add_command(label="Salir", command=app.quit)
 
-# Añadir el menú "Archivo" al menú principal
+# agrego el menú "Archivo" al menú principal
 menubar.add_cascade(label="Archivo", menu=filemenu)
 
 # Menú de ayuda
 helpmenu = Menu(menubar, tearoff=False)
 helpmenu.add_command(label="Ayuda", command=mostrar_ayuda)
 
-# Añadir el menú "Ayuda" al menú principal
+# agrego el menú "Ayuda" al menú principal
 menubar.add_cascade(label="Ayuda", menu=helpmenu)
 
-# Configurar la barra de menú
+# configuro la barra de menú
 app.config(menu=menubar)
 
 
 # maquetacion de los widget
 
-# Crear y colocar los widgets Entry y Label uno por uno
+# creo y coloco los widgets Entry y Label uno por uno
 label1 = Label(app, text="MATERIAL", background="white")
 label1.place(x=260, y=20)
 
@@ -265,7 +265,7 @@ tree.heading("4", text="STOCK", anchor=W)
 tree.heading("5", text="PROVEEDOR", anchor=W)
 tree.place(relx=0.5, y=480, anchor=S, relwidth=1)
 
-# Cargar imagen y agregarla a una etiqueta
+# cargo la imagen y la agrego a una etiqueta
 image = Image.open("1.JPG") 
 image = image.resize((200, 150))
 photo = ImageTk.PhotoImage(image)
