@@ -27,6 +27,11 @@ def crear_base_datos():
     conexion.commit()
     conexion.close()
 
+#falta definir
+def imprimir_base_datos_inicio():
+    pass
+
+
 
 def exportar_base():
     #imprimo en consola a modo testing para ver si se ejecuta la funcion.
