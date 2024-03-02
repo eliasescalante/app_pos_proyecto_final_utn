@@ -1,8 +1,9 @@
 from tkinter import *
 from tkinter import ttk, filedialog
 import sqlite3
-from PIL import Image, ImageTk
 import tkinter.messagebox as messagebox
+from PIL import Image, ImageTk
+
 
 #############################################################################################
 # FUNCIONES
@@ -240,6 +241,8 @@ def modificar_registro():
             conexion.commit()
 
             messagebox.showinfo("Modificar registro", f"Registro con material '{material}' modificado correctamente.")
+
+            
         else:
             messagebox.showerror("Error", f"No se encontró ningún registro para el material '{material}'.")
     except sqlite3.Error as e:
