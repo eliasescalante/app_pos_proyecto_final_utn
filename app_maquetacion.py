@@ -91,7 +91,7 @@ def mostrar_ayuda():
     messagebox.showinfo("Ayuda", mensaje)
 
 # funcion para que no detone los botones
-def accion_boton():
+def exportar_consulta():
     pass
 
 def alta_registro():
@@ -314,6 +314,8 @@ filemenu = Menu(menubar, tearoff=False) # tearoff=False para que no se pueda arr
 
 # Submenú de "Exportar base"
 filemenu.add_command(label="Exportar base", command=exportar_base)
+# Submenú de "exportar consulta"
+filemenu.add_command(label="Exportar consulta", command=exportar_consulta)
 
 # Ítem "Salir"
 filemenu.add_command(label="Salir", command=app.quit)
@@ -410,6 +412,7 @@ tree.heading("4", text="PRECIO DE COSTO", anchor=W)
 tree.heading("5", text="STOCK", anchor=W)
 tree.heading("6", text="PROVEEDOR", anchor=W)
 tree.place(relx=0.5, y=480, anchor=S, relwidth=1)
+
 
 #imprimo la base  de datos en el treeview
 
