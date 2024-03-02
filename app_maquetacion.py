@@ -92,7 +92,26 @@ def mostrar_ayuda():
 
 # funcion para que no detone los botones
 def exportar_consulta():
-    pass
+    # Pido al usuario que seleccione la ubicación y el nombre del archivo
+    file_path = filedialog.asksaveasfilename(defaultextension=".txt", filetypes=[("Archivos de texto", "*.txt")])
+    
+    if file_path:
+        # Obtengo todos los registros mostrados en el Treeview
+        registros = []
+        for item in tree.get_children():
+            registros.append(tree.item(item)['values'])
+
+        if registros:
+            # Escribo los registros en el archivo de texto seleccionado por el usuario
+            with open(file_path, 'w') as file:
+                for registro in registros:
+                    file.write(str(registro) + '\n')
+        
+            messagebox.showinfo("Exportar consulta", "Consulta exportada correctamente.")
+        else:
+            messagebox.showwarning("Exportar consulta", "No hay registros para exportar.")
+    else:
+        messagebox.showwarning("Exportar consulta", "Operación cancelada.")
 
 def alta_registro():
     # capturo la información ingresada por el usuario
