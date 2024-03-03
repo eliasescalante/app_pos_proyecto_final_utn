@@ -5,6 +5,16 @@ import tkinter.messagebox as messagebox
 from PIL import Image, ImageTk
 
 
+"""
+Elias Escalante
+App proyecto final API, practica con Tkinter.
+Aplicacion de escritorio que permite realizar un CRUD  en una base de datos SQLITE.
+Se puede agregar, eliminar o editar registros a la tabla "productos".
+La interfaz es intuitiva y facil de usar.
+"""
+
+
+
 #############################################################################################
 # FUNCIONES
 #############################################################################################
@@ -311,9 +321,10 @@ def modificar_registro():
 #############################################################################################
 app = Tk()
 
+#############################################################################################
 # Incluyo dentro del loop de la app la funcion de crear base de datos
 crear_base_datos()
-
+#############################################################################################
 
 # Titulo de la ventana
 app.title("POS base de materiales")
@@ -432,10 +443,10 @@ tree.heading("5", text="STOCK", anchor=W)
 tree.heading("6", text="PROVEEDOR", anchor=W)
 tree.place(relx=0.5, y=480, anchor=S, relwidth=1)
 
-
+#############################################################################################
 #imprimo la base  de datos en el treeview
-
 imprimir_base_datos_inicio()
+#############################################################################################
 
 # Cargar imagen y agregarla a una etiqueta
 image = Image.open("1.JPG")
