@@ -94,8 +94,12 @@ def exportar_base():
 # Función para mostrar la ayuda
 def mostrar_ayuda():
     # Mensaje de ayuda
-    mensaje = """Esta es una aplicación realizada por elias  que muestra una maquetación básica de una interfaz gráfica utilizando Tkinter. 
+    mensaje = """Esta es una aplicación realizada por ELIAS ESCALANTE  que muestra una maquetación básica de una interfaz gráfica utilizando Tkinter. 
     Puedes utilizar esta aplicación para gestionar una base de datos de materiales, donde puedes consultar, dar de alta, borrar y modificar registros.
+    1 - para borrar un registro debes conocer el numero de material por eso debes realizar un consulta primero para conocerlo y despues borrarlo
+    2 - para consultar podes buscar o por material o por descripcion
+    3 - para modificar debes conocer el numero de material aquello y se debe completar todos los campos del registro. primero realizar una consulta
+    4 - para el alta debes completar todos los campos.
     """
     # Muestro el mensaje de ayuda en una ventana emergente
     messagebox.showinfo("Ayuda", mensaje)
