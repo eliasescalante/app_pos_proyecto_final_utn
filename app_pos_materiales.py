@@ -1,6 +1,7 @@
 from tkinter import *
 from tkinter import ttk, filedialog
 import sqlite3
+import os
 import tkinter.messagebox as messagebox
 from PIL import Image, ImageTk
 
@@ -19,11 +20,18 @@ DEV = Elias Escalante
 #############################################################################################
 
 def crear_base_datos():
-    # Conecto a la base de datos (si no existe, se creará)
+    # CREA LA BASE DE DATOS EN DONDE SE VA ALOJAR LA INFORMACION DE LOS MATERIALES
+
+    #genero un print si ya existe la base con utilizo una estructura condicional
+    if os.path.exists('basededatos.db'):
+        print("la base ya existe")
+        return
+    
+    # Conecto a la base de datos (si no existe, se crea)
     conexion = sqlite3.connect('basededatos.db')
     cursor = conexion.cursor()
 
-    # Creo tabla si no existe
+    # Creo tabla si no existe dentro de la base de datos
     cursor.execute('''CREATE TABLE IF NOT EXISTS materiales (
                         id INTEGER PRIMARY KEY,
                         material TEXT NOT NULL,
@@ -33,18 +41,23 @@ def crear_base_datos():
                         stock INTEGER NOT NULL,
                         proveedor TEXT NOT NULL)''')
 
-    # guardo los cambios y cerrar la conexión
+    # guardo los cambios y despues cierro la conexión
     conexion.commit()
     conexion.close()
 
-def exportar_base():
-    #imprimo en consola a modo testing para ver si se ejecuta la funcion.
-    #esta funcion exporta a txt la base dando la opcion de elegir donde guardar el archivo
+    # genero un print para chequear en consola que se creo la base
+    print("base creada")
 
+def exportar_base():
+    # EXPORTA TODA LA BASE DE DATOS A UN ARCHIVO .TXT Y DEJA ELEGIR DONDE GUARDARLO
+
+    #imprimo en consola a modo testing para ver si se ejecuta la funcion.
     print("Exportando base...")
+
     # Pido al usuario que seleccione la ubicación y el nombre del archivo
     file_path = filedialog.asksaveasfilename(defaultextension=".txt", filetypes=[("Archivos de texto", "*.txt")])
     
+    #Utilizo una estructura condicional para verificar si el usuario selecciono un archivo para guardar.
     if file_path:
         # Conecto a la base de datos
         conexion = sqlite3.connect('basededatos.db')
@@ -66,9 +79,11 @@ def exportar_base():
     else:
         print("Exportación cancelada.")
 
-# Función para mostrar la ayuda
+
 def mostrar_ayuda():
-    # Mensaje de ayuda
+    #MUESTRA UN MENSAJE EN UNA VENTANA EMERGENTE CON LAS ISNTRUCCIONES Y DESCRIPCION DEL PROGRAMA
+
+    # Mensaje de ayuda 
     mensaje = """Esta es una aplicación realizada por ELIAS ESCALANTE  que muestra una maquetación básica de una interfaz gráfica utilizando Tkinter. 
     Puedes utilizar esta aplicación para gestionar una base de datos de materiales, donde puedes consultar, dar de alta, borrar y modificar registros.
     Asi como tambien exportar la base de datos actual y exportar las consultas que hagas. 
@@ -90,6 +105,7 @@ def mostrar_ayuda():
 
 # funcion para que no detone los botones
 def exportar_consulta():
+    #EN BASE A UNA CONSULTA REALIZADA PREVIAMENTE ESTA FUNCION EXPORTA DICHA CONSULTA EN UN .TXT
 
     # Verifico si hay registros en el Treeview en caso que de true emite un mensaje si false continua
     if not tree.get_children():
@@ -119,6 +135,9 @@ def exportar_consulta():
         messagebox.showwarning("Exportar consulta", "Operación cancelada.")
 
 def alta_registro():
+#INGRESA UN NUEVO REGISTRO A LA BASE DATOS
+#TODOS LOS CAMPOS DEBEN SER LLENADOS.
+
     # capturo la información ingresada por el usuario
     material = entry1.get()
     descripcion = entry2.get()
@@ -153,7 +172,7 @@ def alta_registro():
 
         # inserto el nuevo registro en el Treeview
         tree.insert('', 'end', values=nuevo_registro)
-
+    # si hay un error se captura en la variable e y se muestra por mensaje en la pantalla
     except sqlite3.Error as e:
         messagebox.showerror("Error", f"No se pudo agregar el registro: {e}")
 
@@ -170,6 +189,8 @@ def alta_registro():
     entry6.delete(0, END)
 
 def consultar_registro():
+    #REALIZA UNA CONSULTA  A LA TABLA MATERIALES PARA OBTENER TODOS LOS REGISTROS Y LOS AGREGA AL TREEVIEW
+
     # Obtengo el texto ingresado en los campos de entrada
     material = entry1.get()
     descripcion = entry2.get()
@@ -199,6 +220,8 @@ def consultar_registro():
     conexion.close()
 
 def borrar_registro():
+    #BORRA UN REGISTRO DE LA BASE DE DATOS A PARTIR DE SU NUMERO DE MATERIAL INGRESADO
+
     # obtengo el material ingresado por el usuario
     material = entry1.get()
 
@@ -227,6 +250,8 @@ def borrar_registro():
     entry1.delete(0, END)
 
 def modificar_registro():
+    # MODIFICA UNO O VARIOS CAMPOS DE UN REGISTRO BASANDOSE EN EL NUMERO DE MATERIAL
+
     # obtengo el material ingresado por el usuario
     material = entry1.get()
 
@@ -281,6 +306,7 @@ def modificar_registro():
             cursor.execute(sql, tuple(values))
             conexion.commit()
 
+            #muestro un mensaje por pantalla si la modificacion del registro se realizo sin problemas
             messagebox.showinfo("Modificar registro", f"Registro con material '{material}' modificado correctamente.")
 
             # obtengo el registro modificado de la base de datos
@@ -309,12 +335,14 @@ def modificar_registro():
     entry5.delete(0, END)
     entry6.delete(0, END)
 
-#cambia la app a modo oscuro
+
 def modo_oscuro():
+    #CAMBIA EL FONDO DE LA APLICACION A GRIS
     app.configure(background="grey")
 
-#cambia el color al tema clasico
+
 def modo_clasico():
+    #CAMBIA EL FONDO DE LA APLICACION A SU COLOR ORIGINAL
     app.configure(background="white")
 
 #############################################################################################
@@ -337,7 +365,7 @@ app.geometry("1100x400")
 modo_clasico()
 
 #################################################################################################################
-# maquetacion del menu
+# MAQUETACION DEL MENU
 # inserto el menu
 menubar = Menu(app)
 filemenu = Menu(menubar, tearoff=False) # tearoff=False para que no se pueda arrastrar por fuera del menú
@@ -348,8 +376,11 @@ filemenu.add_command(label="Exportar base", command=exportar_base)
 filemenu.add_command(label="Exportar consulta", command=exportar_consulta)
 # Submenú de "tema"
 tema_menu = Menu(filemenu, tearoff=False)
+# Submenu modo oscuro
 tema_menu.add_command(label="Modo Oscuro", command=modo_oscuro)
+#submenu modo clasico
 tema_menu.add_command(label="Modo Clásico", command=modo_clasico)
+#agrego los elementos  al submenu "Tema" y lo agrego a mi barra de menus
 filemenu.add_cascade(label="Tema", menu=tema_menu)
 
 # Ítem "Salir"
@@ -369,7 +400,7 @@ menubar.add_cascade(label="Ayuda", menu=helpmenu)
 app.config(menu=menubar)
 
 #################################################################################################################
-# maquetacion de los widget
+# MAQUETACION DE LOS WIDGET
 
 # Creo y coloco los widgets Entry y Label uno por uno
 label1 = Label(app, text="MATERIAL", background="white")
@@ -413,11 +444,13 @@ entry6 = Entry(app)
 entry6.place(x=400, y=170)
 
 ####################################################################################################################################
-# Botones
+# BOTONES
+
 # variables con las dimensiones
 button_width = 10
 button_height = 1
 
+# botones
 button1 = Button(app, text="Consultar",width=button_width, height=button_height , background="white",command=consultar_registro)
 button1.place(x=200, y=200)
 
@@ -431,7 +464,8 @@ button4 = Button(app, text="Modificar", width=button_width, height=button_height
 button4.place(x=500, y=200)
 
 ######################################################################################################################################
-# Treeview
+# TREEVIEW
+# donde se va a mostrar la previsualizacion de los datos
 tree = ttk.Treeview(app)
 tree["columns"] = ("#0", "1", "2", "3", "4", "5", "6")
 tree.column("#0", width=10, minwidth=150)  # Ajusté el ancho de las columnas
@@ -451,22 +485,23 @@ tree.heading("6", text="PROVEEDOR", anchor=W)
 tree.place(relx=0.5, y=480, anchor=S, relwidth=1)
 
 #############################################################################################
+#IMAGENES
 
-# Cargar imagen y agregarla a una etiqueta
+# cargo la imagen y la agrego a una etiqueta
 image = Image.open("1.JPG")
 image = image.resize((200, 150))
 photo = ImageTk.PhotoImage(image)
 image_label = Label(app, image=photo)
-image_label.image = photo  # Esto es importante para evitar que la imagen se elimine por el recolector de basura
+image_label.image = photo 
 image_label.place(x=580, y=25)
 
-# cargar logo en cada label
+# cargo el logo en cada label
 #label 1
 image = Image.open("1.JPG")
 image = image.resize((20, 20))
 photo = ImageTk.PhotoImage(image)
 image_label = Label(app, image=photo)
-image_label.image = photo  # Esto es importante para evitar que la imagen se elimine por el recolector de basura
+image_label.image = photo  
 image_label.place(x=220, y=20)
 
 # label 2
@@ -474,7 +509,7 @@ image = Image.open("1.JPG")
 image = image.resize((20, 20))
 photo = ImageTk.PhotoImage(image)
 image_label = Label(app, image=photo)
-image_label.image = photo  # Esto es importante para evitar que la imagen se elimine por el recolector de basura
+image_label.image = photo 
 image_label.place(x=220, y=50)
 
 # label 3
@@ -482,7 +517,7 @@ image = Image.open("1.JPG")
 image = image.resize((20, 20))
 photo = ImageTk.PhotoImage(image)
 image_label = Label(app, image=photo)
-image_label.image = photo  # Esto es importante para evitar que la imagen se elimine por el recolector de basura
+image_label.image = photo  
 image_label.place(x=220, y=80)
 
 # label 4
@@ -490,7 +525,7 @@ image = Image.open("1.JPG")
 image = image.resize((20, 20))
 photo = ImageTk.PhotoImage(image)
 image_label = Label(app, image=photo)
-image_label.image = photo  # Esto es importante para evitar que la imagen se elimine por el recolector de basura
+image_label.image = photo  
 image_label.place(x=220, y=110)
 
 # label 5
@@ -498,7 +533,7 @@ image = Image.open("1.JPG")
 image = image.resize((20, 20))
 photo = ImageTk.PhotoImage(image)
 image_label = Label(app, image=photo)
-image_label.image = photo  # Esto es importante para evitar que la imagen se elimine por el recolector de basura
+image_label.image = photo  
 image_label.place(x=220, y=140)
 
 # label 6
@@ -506,7 +541,7 @@ image = Image.open("1.JPG")
 image = image.resize((20, 20))
 photo = ImageTk.PhotoImage(image)
 image_label = Label(app, image=photo)
-image_label.image = photo  # Esto es importante para evitar que la imagen se elimine por el recolector de basura
+image_label.image = photo  
 image_label.place(x=220, y=170)
 
 # cierre de la app
