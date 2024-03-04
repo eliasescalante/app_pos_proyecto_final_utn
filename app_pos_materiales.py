@@ -37,30 +37,6 @@ def crear_base_datos():
     conexion.commit()
     conexion.close()
 
-
-def imprimir_base_datos_inicio():
-    # imprimo el detalle de la base de datos en un treeview()
-    conexion = sqlite3.connect('basededatos.db')
-    cursor  = conexion.cursor()
-
-    # Obtengo todos los registros de la tabla materiales
-    cursor.execute("SELECT * FROM materiales")
-    registros = cursor.fetchall()
-
-    #cierro la conexion  para que no quede abierta toda la vida
-    conexion.close()
-
-    # limpio los campos del treeview
-    for registros in tree.get_children():
-        tree.delete(registros)
-
-    # imprimo los registros de la base en el treeview
-    for row in registros:
-        tree.insert('', 'end', value=row)
-
-
-
-
 def exportar_base():
     #imprimo en consola a modo testing para ver si se ejecuta la funcion.
     #esta funcion exporta a txt la base dando la opcion de elegir donde guardar el archivo
@@ -95,18 +71,34 @@ def mostrar_ayuda():
     # Mensaje de ayuda
     mensaje = """Esta es una aplicación realizada por ELIAS ESCALANTE  que muestra una maquetación básica de una interfaz gráfica utilizando Tkinter. 
     Puedes utilizar esta aplicación para gestionar una base de datos de materiales, donde puedes consultar, dar de alta, borrar y modificar registros.
+    Asi como tambien exportar la base de datos actual y exportar las consultas que hagas. 
+    Con respecto a la aplicacion podes cambiar a modo oscuro o bien al modo clasico.
+    Además tenes acceso a una ventana de salida para visualizar todas las operaciones realizadas que son :
+
     1 - para borrar un registro debes conocer el numero de material por eso debes realizar un consulta primero para conocerlo y despues borrarlo
     2 - para consultar podes buscar o por material o por descripcion
-    3 - para modificar debes conocer el numero de material aquello y se debe completar todos los campos del registro. primero realizar una consulta
+    3 - para modificar debes conocer el numero de material y se debe completar todos los campos del registro. primero realizar una consulta
     4 - para el alta debes completar todos los campos.
+    5 - para exportar una consulta debes de realizarla primero
+
+    derechos reservados a:
+    Elias Escalante
+    deguelelias@gmail.com
     """
     # Muestro el mensaje de ayuda en una ventana emergente
     messagebox.showinfo("Ayuda", mensaje)
 
 # funcion para que no detone los botones
 def exportar_consulta():
+
+    # Verifico si hay registros en el Treeview en caso que de true emite un mensaje si false continua
+    if not tree.get_children():
+        messagebox.showwarning("Exportar consulta", "Debes realizar una consulta primero antes de exportar.")
+        return
+
     # Pido al usuario que seleccione la ubicación y el nombre del archivo con el metodo asksaveasfilename
     file_path = filedialog.asksaveasfilename(defaultextension=".txt", filetypes=[("Archivos de texto", "*.txt")])
+
     
     if file_path:
         # Obtengo todos los registros mostrados en el Treeview
@@ -317,7 +309,13 @@ def modificar_registro():
     entry5.delete(0, END)
     entry6.delete(0, END)
 
+#cambia la app a modo oscuro
+def modo_oscuro():
+    app.configure(background="grey")
 
+#cambia el color al tema clasico
+def modo_clasico():
+    app.configure(background="white")
 
 #############################################################################################
 # MAQUETACION - arranque de la app contenedor
@@ -336,11 +334,10 @@ app.title("POS base de materiales")
 app.geometry("1100x400")
 
 #Seteo el fondo de la app
-app.configure(background="white")
+modo_clasico()
 
-
+#################################################################################################################
 # maquetacion del menu
-
 # inserto el menu
 menubar = Menu(app)
 filemenu = Menu(menubar, tearoff=False) # tearoff=False para que no se pueda arrastrar por fuera del menú
@@ -349,6 +346,11 @@ filemenu = Menu(menubar, tearoff=False) # tearoff=False para que no se pueda arr
 filemenu.add_command(label="Exportar base", command=exportar_base)
 # Submenú de "exportar consulta"
 filemenu.add_command(label="Exportar consulta", command=exportar_consulta)
+# Submenú de "tema"
+tema_menu = Menu(filemenu, tearoff=False)
+tema_menu.add_command(label="Modo Oscuro", command=modo_oscuro)
+tema_menu.add_command(label="Modo Clásico", command=modo_clasico)
+filemenu.add_cascade(label="Tema", menu=tema_menu)
 
 # Ítem "Salir"
 filemenu.add_command(label="Salir", command=app.quit)
@@ -366,7 +368,7 @@ menubar.add_cascade(label="Ayuda", menu=helpmenu)
 # Configurar la barra de menú
 app.config(menu=menubar)
 
-
+#################################################################################################################
 # maquetacion de los widget
 
 # Creo y coloco los widgets Entry y Label uno por uno
@@ -410,6 +412,7 @@ label6.place(x=260, y=170)
 entry6 = Entry(app)
 entry6.place(x=400, y=170)
 
+####################################################################################################################################
 # Botones
 # variables con las dimensiones
 button_width = 10
@@ -427,6 +430,7 @@ button3.place(x=400, y=200)
 button4 = Button(app, text="Modificar", width=button_width, height=button_height, background="white" ,command=modificar_registro)
 button4.place(x=500, y=200)
 
+######################################################################################################################################
 # Treeview
 tree = ttk.Treeview(app)
 tree["columns"] = ("#0", "1", "2", "3", "4", "5", "6")
@@ -446,9 +450,6 @@ tree.heading("5", text="STOCK", anchor=W)
 tree.heading("6", text="PROVEEDOR", anchor=W)
 tree.place(relx=0.5, y=480, anchor=S, relwidth=1)
 
-#############################################################################################
-#imprimo la base  de datos en el treeview
-imprimir_base_datos_inicio()
 #############################################################################################
 
 # Cargar imagen y agregarla a una etiqueta

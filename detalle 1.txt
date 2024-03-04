@@ -1,6 +1,0 @@
-(1, '1', 'coca cola', 13.0, 12.0, 9, 'regi')
-(2, '2', 'seven up 600ml', 1500.0, 900.0, 10, 'reginald s.a')
-(3, '3', 'OREO galletitas', 4.0, 2.0, 9, 'bla')
-(4, '4', 'huggies pañal', 4.0, 0.0, 0, 'blis')
-(5, '45', 'traviata galletita', 40.0, 20.0, 10, 'craft')
-(6, '20', 'alfajor chocolate', 12.0, 9.0, 3, 'reginald s.a')
