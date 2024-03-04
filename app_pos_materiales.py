@@ -10,7 +10,9 @@ DEV = Elias Escalante
     App proyecto final API, practica con Tkinter.
     Aplicacion de escritorio que permite realizar un CRUD  en una base de datos SQLITE.
     Se puede agregar, eliminar o editar registros a la tabla "productos".
-    La interfaz es intuitiva y facil de usar.
+    Tambien permite exportar la base de datos en .txt asi como también la consulta.
+    Tambien se puede cambiar el color de fondo de la aplicacion con el modo oscuro y volver a su modo clásico
+    Intente realizar una interfaz intuitiva y facil de usar.
 """
 
 
