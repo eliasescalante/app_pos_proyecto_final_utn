@@ -337,6 +337,22 @@ def modificar_registro():
     entry5.delete(0, END)
     entry6.delete(0, END)
 
+def limpiar_tree():
+    #LIMPIA EL TREEVIEWW DE TODA LA INFO QUE ESTE EN EL MOMENTO
+
+    # Limpio el Treeview
+    for record in tree.get_children():
+        tree.delete(record)
+
+    # limpio los campos de entrada
+    entry1.delete(0, END)
+    entry2.delete(0, END)
+    entry3.delete(0, END)
+    entry4.delete(0, END)
+    entry5.delete(0, END)
+    entry6.delete(0, END)
+
+    pass
 
 def modo_oscuro():
     #CAMBIA EL FONDO DE LA APLICACION A GRIS
@@ -464,6 +480,9 @@ button3.place(x=400, y=200)
 
 button4 = Button(app, text="Modificar", width=button_width, height=button_height, background="white" ,command=modificar_registro)
 button4.place(x=500, y=200)
+
+button5 = Button(app, text="Limpiar", width=button_width, height=button_height, background="white" ,command=limpiar_tree)
+button5.place(x=600, y=200)
 
 ######################################################################################################################################
 # TREEVIEW
