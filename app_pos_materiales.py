@@ -525,15 +525,16 @@ button5.place(x=600, y=200)
 # TREEVIEW
 # donde se va a mostrar la previsualizacion de los datos
 tree = ttk.Treeview(app)
-tree["columns"] = ("#0", "1", "2", "3", "4", "5", "6")
-tree.column("#0", width=10, minwidth=150)  # Ajusté el ancho de las columnas
+# Columnas del Treeview
+tree["columns"] = ("1", "2", "3", "4", "5", "6")
+
 tree.column("1", width=150, minwidth=150)
 tree.column("2", width=150, minwidth=150)
 tree.column("3", width=150, minwidth=150)
 tree.column("4", width=150, minwidth=150)
 tree.column("5", width=150, minwidth=150)
 tree.column("6", width=150, minwidth=150)
-tree.heading("#0", text="ID", anchor=W)  # Cambié el texto de las cabeceras
+# Encabezados del Treeview
 tree.heading("1", text="MATERIAL", anchor=W)
 tree.heading("2", text="DESCRIPCION", anchor=W)
 tree.heading("3", text="PRECIO DE VENTA", anchor=W)
