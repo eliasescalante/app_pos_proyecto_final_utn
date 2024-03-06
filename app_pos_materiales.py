@@ -3,6 +3,8 @@ from tkinter import ttk, filedialog
 import sqlite3
 import os
 import tkinter.messagebox as messagebox
+from tkinter.messagebox import showerror
+import re
 from PIL import Image, ImageTk
 
 """
@@ -36,7 +38,7 @@ def crear_base_datos():
     # Creo tabla si no existe dentro de la base de datos
     cursor.execute('''CREATE TABLE IF NOT EXISTS materiales (
                         id INTEGER PRIMARY KEY,
-                        material TEXT NOT NULL,
+                        material INTEGER NOT NULL,
                         descripcion TEXT NOT NULL,
                         precio_venta REAL NOT NULL,
                         precio_costo REAL NOT NULL,
@@ -138,15 +140,47 @@ def exportar_consulta():
 
 def alta_registro():
 #INGRESA UN NUEVO REGISTRO A LA BASE DATOS
-#TODOS LOS CAMPOS DEBEN SER LLENADOS.
 
-    # capturo la información ingresada por el usuario
-    material = entry1.get()
-    descripcion = entry2.get()
-    precio_venta = float(entry3.get())
-    precio_costo = float(entry4.get())
-    stock = int(entry5.get())
-    proveedor = entry6.get()
+
+#TODOS LOS CAMPOS DEBEN SER LLENADOS.
+# obtengo la información ingresada por el usuario
+    material = material_var.get()
+    descripcion = descripcion_var.get()
+    precio_venta = precio_venta_var.get()
+    precio_costo = precio_costo_var.get()
+    stock = stock_var.get()
+    proveedor = proveedor_var.get()
+
+    # valido si todos los campos están completos
+    if not material or not descripcion or not precio_venta or not precio_costo or not stock or not proveedor:
+        messagebox.showerror("Error", "Por favor completa todos los campos")
+        return
+
+    #defino los patrones en variables para tipiar menos codigo
+    patron_precio = "^\d+(\.\d+)?$" 
+    patron_entero = "^\d+$"
+    
+    # valido campos utilizando expresiones regulares:
+    if not re.match(patron_entero, material):
+        showerror("Error", "El material debe ser un número entero.")
+        return
+    if not descripcion:
+        showerror("Error", "La descripción no puede estar vacía.")
+        return
+    if not re.match(patron_precio, precio_venta):
+        showerror("Error", "El precio de venta debe ser un número flotante.")
+        return
+    if not re.match(patron_precio, precio_costo):
+        showerror("Error", "El precio de costo debe ser un número flotante.")
+        return
+    if not re.match(patron_entero, stock):
+        showerror("Error", "El stock debe ser un número entero.")
+        return
+    if not proveedor:
+        showerror("Error", "El proveedor no puede estar vacío.")
+        return
+
+
 
     # conecto a la base de datos
     conexion = sqlite3.connect('basededatos.db')
@@ -194,8 +228,8 @@ def consultar_registro():
     #REALIZA UNA CONSULTA  A LA TABLA MATERIALES PARA OBTENER TODOS LOS REGISTROS Y LOS AGREGA AL TREEVIEW
 
     # Obtengo el texto ingresado en los campos de entrada
-    material = entry1.get()
-    descripcion = entry2.get()
+    material = material_var.get()
+    descripcion = descripcion_var.get()
 
     # Conecto a la base de datos
     conexion = sqlite3.connect('basededatos.db')
@@ -203,7 +237,7 @@ def consultar_registro():
 
     # Realizo la consulta en función del texto ingresado
     if material:
-        cursor.execute("SELECT * FROM materiales WHERE material LIKE ?", ('%' + material + '%',))
+        cursor.execute("SELECT * FROM materiales WHERE material = ?", (material,))
     elif descripcion:
         cursor.execute("SELECT * FROM materiales WHERE descripcion LIKE ?", ('%' + descripcion + '%',))
     else:
@@ -225,7 +259,7 @@ def borrar_registro():
     #BORRA UN REGISTRO DE LA BASE DE DATOS A PARTIR DE SU NUMERO DE MATERIAL INGRESADO
 
     # obtengo el material ingresado por el usuario
-    material = entry1.get()
+    material = material_var.get()
 
     # valido que se haya ingresado un material
     if not material:
@@ -255,7 +289,7 @@ def modificar_registro():
     # MODIFICA UNO O VARIOS CAMPOS DE UN REGISTRO BASANDOSE EN EL NUMERO DE MATERIAL
 
     # obtengo el material ingresado por el usuario
-    material = entry1.get()
+    material = material_var.get()
 
     # obtengo los valores ingresados por el usuario para los otros campos
     descripcion = entry2.get()
@@ -368,6 +402,16 @@ def modo_clasico():
 #############################################################################################
 app = Tk()
 
+#VARIABLES
+
+material_var = StringVar(value="0")
+descripcion_var = StringVar()
+precio_venta_var = StringVar(value="0")
+precio_costo_var = StringVar(value="0")
+stock_var = StringVar(value="0")
+proveedor_var = StringVar()
+
+
 #############################################################################################
 # Incluyo dentro del loop de la app la funcion de crear base de datos
 crear_base_datos()
@@ -423,42 +467,35 @@ app.config(menu=menubar)
 # Creo y coloco los widgets Entry y Label uno por uno
 label1 = Label(app, text="MATERIAL", background="white")
 label1.place(x=260, y=20)
-
-entry1 = Entry(app)
+entry1 = Entry(app, textvariable=material_var)
 entry1.place(x=400, y=20)
 
 label2 = Label(app, text="DESCRIPCION", background="white")
 label2.place(x=260, y=50)
-
-entry2 = Entry(app)
+entry2 = Entry(app ,textvariable=descripcion_var)
 entry2.place(x=400, y=50)
 
 label3 = Label(app, text="PRECIO DE VENTA", background="white")
 label3.place(x=260, y=80)
-
-
-entry3 = Entry(app, width=10)
+entry3 = Entry(app, width=10, textvariable=precio_venta_var)
 entry3.place(x=400, y=80)
-entry3.insert(0, "0.0")
+
 
 label4 = Label(app, text="PRECIO DE COSTO", background="white")
 label4.place(x=260, y=110)
-
-entry4 = Entry(app, width=10)
+entry4 = Entry(app, width=10,textvariable=precio_costo_var)
 entry4.place(x=400, y=110)
-entry4.insert(0, "0.0")
+
 
 label5 = Label(app, text="STOCK", background="white")
 label5.place(x=260, y=140)
-
-entry5 = Entry(app, width=10)
+entry5 = Entry(app, width=10,textvariable=stock_var)
 entry5.place(x=400, y=140)
-entry5.insert(0, "0.0")
+
 
 label6 = Label(app, text="PROVEEDOR", background="white")
 label6.place(x=260, y=170)
-
-entry6 = Entry(app)
+entry6 = Entry(app, textvariable=proveedor_var)
 entry6.place(x=400, y=170)
 
 ####################################################################################################################################
