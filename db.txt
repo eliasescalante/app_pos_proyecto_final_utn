@@ -9,3 +9,6 @@
 (9, '22', 'BUBALLO chicle x60', 500.0, 400.0, 2, 'craft')
 (10, '26', 'top line chicle', 400.0, 200.0, 30, 'Mondelez')
 (11, '23', 'lucchetti fideos tallarin', 200.0, 100.0, 34, 'molinos')
+(12, '4', 'PEPAS', 12.4, 2.4, 1, 'algo')
+(13, '9', 'coca', 2.0, 1.0, 8, 'CACONA')
+(14, '23', 'dd', 2.0, 3.0, 4, 'ss')

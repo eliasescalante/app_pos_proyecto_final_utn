@@ -453,7 +453,7 @@ menubar.add_cascade(label="Archivo", menu=filemenu)
 
 # Menú de ayuda
 helpmenu = Menu(menubar, tearoff=False)
-helpmenu.add_command(label="Ayuda", command=mostrar_ayuda)
+helpmenu.add_command(label="Guia", command=mostrar_ayuda)
 
 # Añadir el menú "Ayuda" al menú principal
 menubar.add_cascade(label="Ayuda", menu=helpmenu)
@@ -526,8 +526,8 @@ button5.place(x=600, y=200)
 # donde se va a mostrar la previsualizacion de los datos
 tree = ttk.Treeview(app)
 # Columnas del Treeview
-tree["columns"] = ("1", "2", "3", "4", "5", "6")
-
+tree["columns"] = ("0","1", "2", "3", "4", "5", "6")
+tree.column("0", width=50, anchor=W)
 tree.column("1", width=150, minwidth=150)
 tree.column("2", width=150, minwidth=150)
 tree.column("3", width=150, minwidth=150)
@@ -535,6 +535,7 @@ tree.column("4", width=150, minwidth=150)
 tree.column("5", width=150, minwidth=150)
 tree.column("6", width=150, minwidth=150)
 # Encabezados del Treeview
+tree.heading("0", text="ID")
 tree.heading("1", text="MATERIAL", anchor=W)
 tree.heading("2", text="DESCRIPCION", anchor=W)
 tree.heading("3", text="PRECIO DE VENTA", anchor=W)
