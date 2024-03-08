@@ -9,9 +9,10 @@ from PIL import Image, ImageTk
 
 """
 DEV = Elias Escalante
-    App proyecto final API, practica con Tkinter.
+
+Descripcion:
+    App proyecto final UTN.BA DIPLOMATURA, practica con Tkinter.
     Aplicacion de escritorio que permite realizar un CRUD  en una base de datos SQLITE.
-    Se puede agregar, eliminar o editar registros a la tabla "productos".
     Tambien permite exportar la base de datos en .txt asi como también la consulta.
     Tambien se puede cambiar el color de fondo de la aplicacion con el modo oscuro y volver a su modo clásico
     Intente realizar una interfaz intuitiva y facil de usar.
@@ -24,9 +25,14 @@ DEV = Elias Escalante
 #############################################################################################
 
 def crear_base_datos():
-    # CREA LA BASE DE DATOS EN DONDE SE VA ALOJAR LA INFORMACION DE LOS MATERIALES
-
-    #genero un print si ya existe la base con utilizo una estructura condicional
+    """
+    CREA LA BASE DE DATOS EN DONDE SE VA ALOJAR LA INFORMACION DE LOS MATERIALES.
+    SI LA BASE DE DATOS YA EXISTE IMPRIME UN MENSAJE POR CONSOLA Y TERMINA LA FUNCION.
+    POR EL CONTRARIO NO EXISTE, ENTONCES CONECTA A LA BASE DE DATOS "basededatos.db" Y LA CREA
+    DENTRO DE LA MISMA CREA LA TABLA MATERIALES SI NO EXISTE CON SUS CAMPOS QUE NO PUEDEN SER NULOS
+    """
+    
+    #genero un print si ya existe la base Y utilizo una estructura condicional para chequear esto
     if os.path.exists('basededatos.db'):
         print("la base ya existe")
         return
@@ -35,9 +41,9 @@ def crear_base_datos():
     conexion = sqlite3.connect('basededatos.db')
     cursor = conexion.cursor()
 
-    # Creo tabla si no existe dentro de la base de datos
+    # Creo tabla si no existe dentro de la base de datos con sus campos
     cursor.execute('''CREATE TABLE IF NOT EXISTS materiales (
-                        id INTEGER PRIMARY KEY,
+                        id INTEGER PRIMARY KEY AUTOINCREMENT,
                         material INTEGER NOT NULL,
                         descripcion TEXT NOT NULL,
                         precio_venta REAL NOT NULL,
@@ -52,8 +58,14 @@ def crear_base_datos():
     # genero un print para chequear en consola que se creo la base
     print("base creada")
 
+
 def exportar_base():
-    # EXPORTA TODA LA BASE DE DATOS A UN ARCHIVO .TXT Y DEJA ELEGIR DONDE GUARDARLO
+    """
+    EXPORTA TODA LA BASE DE DATOS A UN ARCHIVO .TXT Y DEJA ELEGIR DONDE GUARDARLO MEDIANTE  UNA VENTANA EMERGENTE.
+    IMPRIME EN CONSOLA LA ACCION SI SE EXPORTA CORRECTAMENTE ADEMAS DE MOSTRAR CON UN SHOWINFO UNA VENTANA EMERGENTE CON EL MISMO MENSAJE
+    EN CASO CONTRARIO SE CANCELA Y SE IMPRIME POR CONSOLA Y CON UN SHOWERROR PARA MOSTRAR EL MENSAJE DE CANCELACION.
+    """
+    
 
     #imprimo en consola a modo testing para ver si se ejecuta la funcion.
     print("Exportando base...")
@@ -63,7 +75,7 @@ def exportar_base():
     
     #Utilizo una estructura condicional para verificar si el usuario selecciono un archivo para guardar.
     if file_path:
-        # Conecto a la base de datos
+        # si da true entonces Conecto la base de datos
         conexion = sqlite3.connect('basededatos.db')
         cursor = conexion.cursor()
 
@@ -80,38 +92,51 @@ def exportar_base():
                 file.write(str(registro) + '\n')
         
         print("Base de datos exportada correctamente.")
+        messagebox.showinfo("Exportacion", "La Base de datos fue exportada...")
     else:
         print("Exportación cancelada.")
+        showerror("Exportacion", "Exportacion cancelada")
 
 
 def mostrar_ayuda():
-    #MUESTRA UN MENSAJE EN UNA VENTANA EMERGENTE CON LAS ISNTRUCCIONES Y DESCRIPCION DEL PROGRAMA
+    """
+    MUESTRA UN MENSAJE EN UNA VENTANA EMERGENTE CON LAS ISNTRUCCIONES Y DESCRIPCION DEL PROGRAMA
+    """
 
     # Mensaje de ayuda 
     mensaje = """Esta es una aplicación realizada por ELIAS ESCALANTE  que muestra una maquetación básica de una interfaz gráfica utilizando Tkinter. 
     Puedes utilizar esta aplicación para gestionar una base de datos de materiales, donde puedes consultar, dar de alta, borrar y modificar registros.
     Asi como tambien exportar la base de datos actual y exportar las consultas que hagas. 
     Con respecto a la aplicacion podes cambiar a modo oscuro o bien al modo clasico.
-    Además tenes acceso a una ventana de salida para visualizar todas las operaciones realizadas que son :
+    Además tenes acceso a una ventana de salida para visualizar todas las operaciones realizadas. A tener en cuenta:
 
-    1 - para borrar un registro debes conocer el numero de material por eso debes realizar un consulta primero para conocerlo y despues borrarlo
-    2 - para consultar podes buscar o por material o por descripcion
-    3 - para modificar debes conocer el numero de material y se debe completar todos los campos del registro. primero realizar una consulta
-    4 - para el alta debes completar todos los campos.
-    5 - para exportar una consulta debes de realizarla primero
+    1 - para borrar un registro debes realizar un consulta primero luego seleccionarlo en el treeview y luego presionar el boton de borrar.
+    2 - para consultar podes buscar por descripcion y luego presionar el boton consultar.
+    3 - para modificar debes conocer el numero de material y se debe completar todos los campos del registro. primero realizar una consulta para conocer el numero de material
+    4 - para el alta debes completar todos los campos, respetando los criterios de cada uno. Luego presionas el boton de Alta
+    5 - para exportar una consulta debes de realizarla primero y luego ir al menu y elegir "exportar consulta".
+    6 - para exportar la base solo ve al menu y haz click en "exportar base"
 
     derechos reservados a:
     Elias Escalante
     deguelelias@gmail.com
+    git del proyecto:
+    https://github.com/eliasescalante/app_proyecto_final_utn.git
     """
     # Muestro el mensaje de ayuda en una ventana emergente
     messagebox.showinfo("Ayuda", mensaje)
 
-# funcion para que no detone los botones
-def exportar_consulta():
-    #EN BASE A UNA CONSULTA REALIZADA PREVIAMENTE ESTA FUNCION EXPORTA DICHA CONSULTA EN UN .TXT
 
-    # Verifico si hay registros en el Treeview en caso que de true emite un mensaje si false continua
+def exportar_consulta():
+    """
+    EXPORTA LA CONSULTA REALIZADA E IMPRESA EN EL TREEVIEW EN UN ARCHIVO .TXT
+    MUESTRA EN UNA VENTANA EMERGENTE SI LA ACCION SI REALIZO CORRECTAMENTE.
+    EN CASO QUE NO HAYA UNA CONSULTA REALIZADA PREVIAMENTE MUESTRA UN MENSAJE EN UN SHOWWARNING INDICANDO QUE NO HAY REGISTROS.
+    SI SE CANCELA LA OPERACION TAMBIEN SE MUESTRA POR PANTALLA CON UN SHOWWARNING.
+    """
+    
+
+    # Verifico si hay registros en el Treeview en caso de que de TRUE emite un mensaje si da FALSE continua
     if not tree.get_children():
         messagebox.showwarning("Exportar consulta", "Debes realizar una consulta primero antes de exportar.")
         return
@@ -119,7 +144,7 @@ def exportar_consulta():
     # Pido al usuario que seleccione la ubicación y el nombre del archivo con el metodo asksaveasfilename
     file_path = filedialog.asksaveasfilename(defaultextension=".txt", filetypes=[("Archivos de texto", "*.txt")])
 
-    
+    # utilizo una estructura condicional if para validar que se haya ingresado  correctamente el nombre del archivo
     if file_path:
         # Obtengo todos los registros mostrados en el Treeview
         registros = []
@@ -138,9 +163,18 @@ def exportar_consulta():
     else:
         messagebox.showwarning("Exportar consulta", "Operación cancelada.")
 
-def alta_registro():
-#INGRESA UN NUEVO REGISTRO A LA BASE DATOS
 
+
+def alta_registro():
+    """
+    INGRESA UN NUEVO REGISTRO A LA BASE DE DATOS.
+    SI NO SE COMPLETAN TODOS LOS CAMPOS EMITE UN MENSAJE DE ERROR  Y NO GUARDA NINGUN DATO.
+    SI SE COMPLETAN TODOS LOS CAMPOS Y SE HACE CLICK EN EL BOTÓN ALTA INSERTA EL REGISTRO EN LA BASE DE DATOS.
+    AL DARSE EL ALTA MUESTRA UN MENSAJE DE EXITO E INSERTA EN EL TREEVIEW DICHO REGISTRO
+    UTILIZANDO EXPRESIONES REGULARES (REGEX) VALIDO LOS CAMPOS A INGRESAR.
+    SI ALGO FALLA EN EL PROCESO DE ALTA EMITE UN MENSAJE DE ERROR Y NO GUARDA NI UNO DE LOS DATOS INTRODUCIDOS.
+    
+    """
 
 #TODOS LOS CAMPOS DEBEN SER LLENADOS.
 # obtengo la información ingresada por el usuario
@@ -157,10 +191,11 @@ def alta_registro():
         return
 
     #defino los patrones en variables para tipiar menos codigo
+    # No utilizo validacion para descripcion porque las diferentes marcas o nombres utilizan cualquier caracter
     patron_precio = "^\d+(\.\d+)?$" 
     patron_entero = "^\d+$"
     
-    # valido campos utilizando expresiones regulares:
+    # valido los campos uno por uno utilizando expresiones regulares pasando como argumentos las variables declaradas anteriormente:
     if not re.match(patron_entero, material):
         showerror("Error", "El material debe ser un número entero.")
         return
@@ -180,8 +215,6 @@ def alta_registro():
         showerror("Error", "El proveedor no puede estar vacío.")
         return
 
-
-
     # conecto a la base de datos
     conexion = sqlite3.connect('basededatos.db')
     cursor = conexion.cursor()
@@ -197,6 +230,7 @@ def alta_registro():
 
         # muestro el mensaje de éxito
         messagebox.showinfo("Alta de registro", "Registro agregado correctamente.")
+        print("Registro agregado correctamente.")
 
         # obtengo el registro recién insertado
         cursor.execute("SELECT * FROM materiales WHERE material = ?", (material,))
@@ -225,68 +259,94 @@ def alta_registro():
     entry6.delete(0, END)
 
 def consultar_registro():
-    #REALIZA UNA CONSULTA  A LA TABLA MATERIALES PARA OBTENER TODOS LOS REGISTROS Y LOS AGREGA AL TREEVIEW
-
-    # Obtengo el texto ingresado en los campos de entrada
-    material = material_var.get()
+    """
+    REALIZA UNA CONSULTA  A LA TABLA DE MATERIALES EN LA BASE DE DATOS PARA OBTENER TODOS LOS REGISTROS Y LOS AGREGA AL TREEVIEW
+    SI NO SE COMPLETA LOS CAMPOS REQUERIDOS PARA REALIZAR LA CONSULTA EMITE UN MENSAJE EN UN SHOWWARNING PARA QUE SE COMPLETE ALGUN CRITERIO DE BUSQUEDA
+    EL CRITERIO DE BUSQUEDA VA A SER LA DESCRIPCION.
+    """
+    
+    # Obtengo el texto ingresado en el campo de entrada
     descripcion = descripcion_var.get()
 
-    # Conecto a la base de datos
+    # Conecto la base de datos
     conexion = sqlite3.connect('basededatos.db')
     cursor = conexion.cursor()
 
-    # Realizo la consulta en función del texto ingresado
-    if material:
-        cursor.execute("SELECT * FROM materiales WHERE material = ?", (material,))
-    elif descripcion:
+    # Realizo la consulta en función del texto ingresado con una estructura condicional elif
+    if descripcion:
         cursor.execute("SELECT * FROM materiales WHERE descripcion LIKE ?", ('%' + descripcion + '%',))
     else:
-        messagebox.showwarning("Consulta", "Debe ingresar al menos un criterio de búsqueda (Material o Descripción).")
+        messagebox.showwarning("Consulta", "Debe ingresar un criterio de búsqueda (Descripción).")
         return
 
-    # Limpio el treeview antes de agregar nuevos datos
+    # Limpio el treeview antes de agregar los nuevos datos
     for record in tree.get_children():
         tree.delete(record)
 
-    # Inserto los resultados de la consulta en el treeview
-    for row in cursor.fetchall():
-        tree.insert('', 'end', values=row)
+    #agrego los resultados a la variable registro
+    registro =  cursor.fetchall()
+
+    if registro:
+        # Inserto los resultados de la consulta en el treeview
+        for row in registro:
+            tree.insert('', 'end', values=row)
+    else:
+        messagebox.showinfo("Consulta sin resultados","No se encontraron coincidencias.")
 
     # Cierro la conexión
     conexion.close()
 
+
 def borrar_registro():
-    #BORRA UN REGISTRO DE LA BASE DE DATOS A PARTIR DE SU NUMERO DE MATERIAL INGRESADO
-
-    # obtengo el material ingresado por el usuario
-    material = material_var.get()
-
-    # valido que se haya ingresado un material
-    if not material:
-        messagebox.showwarning("Borrar registro", "Debe ingresar el material del registro que desea borrar.")
+    """
+    BORRA UN REGISTRO DE LA BASE DE DATOS.
+    SE DEBE SELECCIONAR EL REGISTRO DESDE EL TREEVIEW Y LUEGO PRESIONAR EL BOTON BORRAR.
+    ES NECESARIO REALIZAR UNA CONSULTA PRIMERO. EN CASO DE NO REALIZARLO EMITE UN MENSAJE DE WARNING 
+    """
+    
+    #  Obtengo el material del registro seleccionado en el treeview
+    # Si no se proporciona material emite un mensaje de error
+    selection = tree.selection()
+    if not selection:
+        messagebox.showwarning("Borrar registro", "Selecciona un registro para eliminar.")
         return
 
-    # conecto la base de datos
+    #obtengo el elemento id del registro a borrar que fue seleccionado
+    # luego lo guardo en una variable el campo material del registro a borrar
+    item = tree.item(selection[0])
+    material_a_borrar = item['values'][1]
+    
+    # contecto a la base de datos
     conexion = sqlite3.connect('basededatos.db')
     cursor = conexion.cursor()
 
     try:
-        # intento borrar el registro con el material proporcionado
-        cursor.execute("DELETE FROM materiales WHERE material = ?", (material,))
+        # intento borrar el registro de la base de datos
+        cursor.execute("DELETE FROM materiales WHERE material = ?", (material_a_borrar,))
         conexion.commit()
-        messagebox.showinfo("Borrar registro", f"Registro con material '{material}' eliminado correctamente.")
+        
+        # Borro el registro del treeview
+        for item in tree.selection():
+            tree.delete(item)
+        
+        messagebox.showinfo("Borrar registro", f"Registro con material '{material_a_borrar}' eliminado correctamente.")
     except sqlite3.Error as e:
-        # muestro un mensaje en caso de error
         messagebox.showerror("Error", f"No se pudo borrar el registro: {e}")
     finally:
-        # cierro la conexión
+        # Cerrar la conexión a la base de datos
         conexion.close()
 
     # borro los campo de entrada después de borrar el registro
     entry1.delete(0, END)
 
 def modificar_registro():
-    # MODIFICA UNO O VARIOS CAMPOS DE UN REGISTRO BASANDOSE EN EL NUMERO DE MATERIAL
+    """
+    MODIFICA UNO O VARIOS CAMPOS DE UN REGISTRO BASANDOSE EN EL NUMERO DE MATERIAL
+    SE DEBE COMPLETAR TODOS LOS CAMPOS
+    EMITE UN MENSAJE  SI NO SE HA SELECCIONADO NINGUN REGISTRO Y PARA MODIFICAR
+    EMITE UN MENSAJE SI SE MODIFICO EL REGISTRO
+    EMITE MENSAJE SI OCURRE UN ERROR DEL TIPO NO EXISTE EL REGISTRO O  CAMPOS INCOMPLETOS
+    """
 
     # obtengo el material ingresado por el usuario
     material = material_var.get()
@@ -306,6 +366,7 @@ def modificar_registro():
     # conecto a la base de datos
     conexion = sqlite3.connect('basededatos.db')
     cursor = conexion.cursor()
+    print("conectando base de dato...")
 
     try:
         # verifico si el registro con el material proporcionado existe
@@ -372,9 +433,11 @@ def modificar_registro():
     entry6.delete(0, END)
 
 def limpiar_tree():
-    #LIMPIA EL TREEVIEWW DE TODA LA INFO QUE ESTE EN EL MOMENTO
+    """
+    LIMPIA EL TREEVIEWW DE TODA LA INFO QUE ESTE EN EL MOMENTO
+    """
 
-    # Limpio el Treeview
+    # Limpio el Treeview utilizando una estructura repetitiva  For que recorre todos los hijos del nodo raiz
     for record in tree.get_children():
         tree.delete(record)
 
@@ -389,13 +452,19 @@ def limpiar_tree():
     pass
 
 def modo_oscuro():
-    #CAMBIA EL FONDO DE LA APLICACION A GRIS
+    """
+    CAMBIA EL FONDO DE LA APLICACION A GRIS
+    """
     app.configure(background="grey")
 
 
 def modo_clasico():
-    #CAMBIA EL FONDO DE LA APLICACION A SU COLOR ORIGINAL
+    """
+    CAMBIA EL FONDO DE LA APLICACION A BLANCO QUE ES EL MODO ORIGINAL
+    """
     app.configure(background="white")
+
+
 
 #############################################################################################
 # MAQUETACION - arranque de la app contenedor
@@ -403,7 +472,6 @@ def modo_clasico():
 app = Tk()
 
 #VARIABLES
-
 material_var = StringVar(value="0")
 descripcion_var = StringVar()
 precio_venta_var = StringVar(value="0")
@@ -419,10 +487,8 @@ crear_base_datos()
 
 # Titulo de la ventana
 app.title("POS base de materiales")
-
 # seteo del tamaño de la ventana
 app.geometry("1100x400")
-
 #Seteo el fondo de la app
 modo_clasico()
 
@@ -448,83 +514,95 @@ filemenu.add_cascade(label="Tema", menu=tema_menu)
 # Ítem "Salir"
 filemenu.add_command(label="Salir", command=app.quit)
 
-# Añadir el menú "Archivo" al menú principal
+# Agrego el menú "Archivo" al menú principal
 menubar.add_cascade(label="Archivo", menu=filemenu)
 
 # Menú de ayuda
 helpmenu = Menu(menubar, tearoff=False)
 helpmenu.add_command(label="Guia", command=mostrar_ayuda)
 
-# Añadir el menú "Ayuda" al menú principal
+# Agrego el menú "Ayuda" al menú principal
 menubar.add_cascade(label="Ayuda", menu=helpmenu)
 
-# Configurar la barra de menú
+# Configuro la barra de menú
 app.config(menu=menubar)
 
-#################################################################################################################
+
+#################################################################################################################  
 # MAQUETACION DE LOS WIDGET
 
 # Creo y coloco los widgets Entry y Label uno por uno
+#MATERIAL
 label1 = Label(app, text="MATERIAL", background="white")
 label1.place(x=260, y=20)
 entry1 = Entry(app, textvariable=material_var)
 entry1.place(x=400, y=20)
 
+#DESCRIPCION
 label2 = Label(app, text="DESCRIPCION", background="white")
 label2.place(x=260, y=50)
 entry2 = Entry(app ,textvariable=descripcion_var)
 entry2.place(x=400, y=50)
 
+#PRECIO DE VENTA
 label3 = Label(app, text="PRECIO DE VENTA", background="white")
 label3.place(x=260, y=80)
 entry3 = Entry(app, width=10, textvariable=precio_venta_var)
 entry3.place(x=400, y=80)
 
-
+#PRECIOS DE COSTO
 label4 = Label(app, text="PRECIO DE COSTO", background="white")
 label4.place(x=260, y=110)
 entry4 = Entry(app, width=10,textvariable=precio_costo_var)
 entry4.place(x=400, y=110)
 
-
+#STOCK
 label5 = Label(app, text="STOCK", background="white")
 label5.place(x=260, y=140)
 entry5 = Entry(app, width=10,textvariable=stock_var)
 entry5.place(x=400, y=140)
 
-
+#PROVEEDOR
 label6 = Label(app, text="PROVEEDOR", background="white")
 label6.place(x=260, y=170)
 entry6 = Entry(app, textvariable=proveedor_var)
 entry6.place(x=400, y=170)
 
+
 ####################################################################################################################################
 # BOTONES
 
-# variables con las dimensiones
+# variables con las dimensiones para simplificar la edicion de los tamaños
 button_width = 10
 button_height = 1
 
-# botones
+# boton Consultar
 button1 = Button(app, text="Consultar",width=button_width, height=button_height , background="white",command=consultar_registro)
 button1.place(x=200, y=200)
 
+#boton alta
 button2 = Button(app, text="Alta", width=button_width, height=button_height, background="white" ,command=alta_registro)
 button2.place(x=300, y=200)
 
+#boton borrar
 button3 = Button(app, text="Borrar", width=button_width, height=button_height, background="white" ,command=borrar_registro)
 button3.place(x=400, y=200)
 
+#boton modificar
 button4 = Button(app, text="Modificar", width=button_width, height=button_height, background="white" ,command=modificar_registro)
 button4.place(x=500, y=200)
 
+#boton limpiar
 button5 = Button(app, text="Limpiar", width=button_width, height=button_height, background="white" ,command=limpiar_tree)
 button5.place(x=600, y=200)
 
-######################################################################################################################################
+
+######################################################################################
+
 # TREEVIEW
 # donde se va a mostrar la previsualizacion de los datos
 tree = ttk.Treeview(app)
+
 # Columnas del Treeview
 tree["columns"] = ("0","1", "2", "3", "4", "5", "6")
 tree.column("0", width=50, anchor=W)
@@ -534,6 +612,7 @@ tree.column("3", width=150, minwidth=150)
 tree.column("4", width=150, minwidth=150)
 tree.column("5", width=150, minwidth=150)
 tree.column("6", width=150, minwidth=150)
+
 # Encabezados del Treeview
 tree.heading("0", text="ID")
 tree.heading("1", text="MATERIAL", anchor=W)
