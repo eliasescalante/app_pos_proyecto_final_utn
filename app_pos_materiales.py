@@ -198,7 +198,7 @@ def alta_registro():
 
     #defino los patrones en variables para tipiar menos codigo
     # No utilizo validacion para descripcion porque las diferentes marcas o nombres utilizan cualquier caracter
-    patron_precio = "^\d+(\.\d+)?$" 
+    patron_precio = "^\d+(\.\d+)?$"
     patron_entero = "^\d+$"
 
     # valido los campos uno por uno utilizando expresiones regulares pasando como argumentos las variables declaradas anteriormente:
