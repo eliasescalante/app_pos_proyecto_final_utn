@@ -36,7 +36,7 @@ def crear_base_datos():
     if os.path.exists('basededatos.db'):
         print("la base ya existe")
         return
-    
+
     # Conecto a la base de datos (si no existe, se crea)
     conexion = sqlite3.connect('basededatos.db')
     cursor = conexion.cursor()
