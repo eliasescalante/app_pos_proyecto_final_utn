@@ -31,7 +31,7 @@ def crear_base_datos():
     POR EL CONTRARIO NO EXISTE, ENTONCES CONECTA A LA BASE DE DATOS "basededatos.db" Y LA CREA
     DENTRO DE LA MISMA CREA LA TABLA MATERIALES SI NO EXISTE CON SUS CAMPOS QUE NO PUEDEN SER NULOS
     """
-    
+
     #genero un print si ya existe la base Y utilizo una estructura condicional para chequear esto
     if os.path.exists('basededatos.db'):
         print("la base ya existe")
@@ -61,18 +61,22 @@ def crear_base_datos():
 
 def exportar_base():
     """
-    EXPORTA TODA LA BASE DE DATOS A UN ARCHIVO .TXT Y DEJA ELEGIR DONDE GUARDARLO MEDIANTE  UNA VENTANA EMERGENTE.
-    IMPRIME EN CONSOLA LA ACCION SI SE EXPORTA CORRECTAMENTE ADEMAS DE MOSTRAR CON UN SHOWINFO UNA VENTANA EMERGENTE CON EL MISMO MENSAJE
-    EN CASO CONTRARIO SE CANCELA Y SE IMPRIME POR CONSOLA Y CON UN SHOWERROR PARA MOSTRAR EL MENSAJE DE CANCELACION.
+    EXPORTA TODA LA BASE DE DATOS A UN ARCHIVO 
+    .TXT Y DEJA ELEGIR DONDE GUARDARLO MEDIANTE  UNA VENTANA EMERGENTE.
+    IMPRIME EN CONSOLA LA ACCION SI SE EXPORTA CORRECTAMENTE 
+    ADEMAS DE MOSTRAR CON UN SHOWINFO UNA VENTANA EMERGENTE 
+    CON EL MISMO MENSAJE.
+    EN CASO CONTRARIO SE CANCELA Y SE IMPRIME POR CONSOLA
+    Y CON UN SHOWERROR PARA MOSTRAR EL MENSAJE DE CANCELACION.
     """
-    
+
 
     #imprimo en consola a modo testing para ver si se ejecuta la funcion.
     print("Exportando base...")
 
     # Pido al usuario que seleccione la ubicación y el nombre del archivo
     file_path = filedialog.asksaveasfilename(defaultextension=".txt", filetypes=[("Archivos de texto", "*.txt")])
-    
+
     #Utilizo una estructura condicional para verificar si el usuario selecciono un archivo para guardar.
     if file_path:
         # si da true entonces Conecto la base de datos
@@ -131,10 +135,11 @@ def exportar_consulta():
     """
     EXPORTA LA CONSULTA REALIZADA E IMPRESA EN EL TREEVIEW EN UN ARCHIVO .TXT
     MUESTRA EN UNA VENTANA EMERGENTE SI LA ACCION SI REALIZO CORRECTAMENTE.
-    EN CASO QUE NO HAYA UNA CONSULTA REALIZADA PREVIAMENTE MUESTRA UN MENSAJE EN UN SHOWWARNING INDICANDO QUE NO HAY REGISTROS.
+    EN CASO QUE NO HAYA UNA CONSULTA REALIZADA PREVIAMENTE MUESTRA 
+    UN MENSAJE EN UN SHOWWARNING INDICANDO QUE NO HAY REGISTROS.
     SI SE CANCELA LA OPERACION TAMBIEN SE MUESTRA POR PANTALLA CON UN SHOWWARNING.
     """
-    
+
 
     # Verifico si hay registros en el Treeview en caso de que de TRUE emite un mensaje si da FALSE continua
     if not tree.get_children():
@@ -156,7 +161,7 @@ def exportar_consulta():
             with open(file_path, 'w') as file:
                 for registro in registros:
                     file.write(str(registro) + '\n')
-        
+
             messagebox.showinfo("Exportar consulta", "Consulta exportada correctamente.")
         else:
             messagebox.showwarning("Exportar consulta", "No hay registros para exportar.")
@@ -169,11 +174,12 @@ def alta_registro():
     """
     INGRESA UN NUEVO REGISTRO A LA BASE DE DATOS.
     SI NO SE COMPLETAN TODOS LOS CAMPOS EMITE UN MENSAJE DE ERROR  Y NO GUARDA NINGUN DATO.
-    SI SE COMPLETAN TODOS LOS CAMPOS Y SE HACE CLICK EN EL BOTÓN ALTA INSERTA EL REGISTRO EN LA BASE DE DATOS.
+    SI SE COMPLETAN TODOS LOS CAMPOS Y SE HACE CLICK 
+    EN EL BOTÓN ALTA INSERTA EL REGISTRO EN LA BASE DE DATOS.
     AL DARSE EL ALTA MUESTRA UN MENSAJE DE EXITO E INSERTA EN EL TREEVIEW DICHO REGISTRO
     UTILIZANDO EXPRESIONES REGULARES (REGEX) VALIDO LOS CAMPOS A INGRESAR.
-    SI ALGO FALLA EN EL PROCESO DE ALTA EMITE UN MENSAJE DE ERROR Y NO GUARDA NI UNO DE LOS DATOS INTRODUCIDOS.
-    
+    SI ALGO FALLA EN EL PROCESO DE ALTA EMITE UN MENSAJE 
+    DE ERROR Y NO GUARDA NI UNO DE LOS DATOS INTRODUCIDOS.
     """
 
 #TODOS LOS CAMPOS DEBEN SER LLENADOS.
@@ -194,7 +200,7 @@ def alta_registro():
     # No utilizo validacion para descripcion porque las diferentes marcas o nombres utilizan cualquier caracter
     patron_precio = "^\d+(\.\d+)?$" 
     patron_entero = "^\d+$"
-    
+
     # valido los campos uno por uno utilizando expresiones regulares pasando como argumentos las variables declaradas anteriormente:
     if not re.match(patron_entero, material):
         showerror("Error", "El material debe ser un número entero.")
@@ -260,11 +266,13 @@ def alta_registro():
 
 def consultar_registro():
     """
-    REALIZA UNA CONSULTA  A LA TABLA DE MATERIALES EN LA BASE DE DATOS PARA OBTENER TODOS LOS REGISTROS Y LOS AGREGA AL TREEVIEW
-    SI NO SE COMPLETA LOS CAMPOS REQUERIDOS PARA REALIZAR LA CONSULTA EMITE UN MENSAJE EN UN SHOWWARNING PARA QUE SE COMPLETE ALGUN CRITERIO DE BUSQUEDA
+    REALIZA UNA CONSULTA  A LA TABLA DE MATERIALES EN LA BASE 
+    DE DATOS PARA OBTENER TODOS LOS REGISTROS Y LOS AGREGA AL TREEVIEW
+    SI NO SE COMPLETA LOS CAMPOS REQUERIDOS PARA REALIZAR LA CONSULTA 
+    EMITE UN MENSAJE EN UN SHOWWARNING PARA QUE SE COMPLETE ALGUN CRITERIO DE BUSQUEDA
     EL CRITERIO DE BUSQUEDA VA A SER LA DESCRIPCION.
     """
-    
+
     # Obtengo el texto ingresado en el campo de entrada
     descripcion = descripcion_var.get()
 
@@ -303,7 +311,7 @@ def borrar_registro():
     SE DEBE SELECCIONAR EL REGISTRO DESDE EL TREEVIEW Y LUEGO PRESIONAR EL BOTON BORRAR.
     ES NECESARIO REALIZAR UNA CONSULTA PRIMERO. EN CASO DE NO REALIZARLO EMITE UN MENSAJE DE WARNING 
     """
-    
+
     #  Obtengo el material del registro seleccionado en el treeview
     # Si no se proporciona material emite un mensaje de error
     selection = tree.selection()
@@ -315,7 +323,7 @@ def borrar_registro():
     # luego lo guardo en una variable el campo material del registro a borrar
     item = tree.item(selection[0])
     material_a_borrar = item['values'][1]
-    
+
     # contecto a la base de datos
     conexion = sqlite3.connect('basededatos.db')
     cursor = conexion.cursor()
@@ -324,11 +332,11 @@ def borrar_registro():
         # intento borrar el registro de la base de datos
         cursor.execute("DELETE FROM materiales WHERE material = ?", (material_a_borrar,))
         conexion.commit()
-        
+
         # Borro el registro del treeview
         for item in tree.selection():
             tree.delete(item)
-        
+
         messagebox.showinfo("Borrar registro", f"Registro con material '{material_a_borrar}' eliminado correctamente.")
     except sqlite3.Error as e:
         messagebox.showerror("Error", f"No se pudo borrar el registro: {e}")
@@ -449,7 +457,7 @@ def limpiar_tree():
     entry5.delete(0, END)
     entry6.delete(0, END)
 
-    pass
+
 
 def modo_oscuro():
     """
