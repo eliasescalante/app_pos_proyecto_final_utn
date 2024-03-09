@@ -24,6 +24,7 @@ Descripcion:
 # FUNCIONES
 #############################################################################################
 
+
 def crear_base_datos():
     """
     CREA LA BASE DE DATOS EN DONDE SE VA ALOJAR LA INFORMACION DE LOS MATERIALES.
@@ -182,8 +183,8 @@ def alta_registro():
     DE ERROR Y NO GUARDA NI UNO DE LOS DATOS INTRODUCIDOS.
     """
 
-#TODOS LOS CAMPOS DEBEN SER LLENADOS.
-# obtengo la información ingresada por el usuario
+    #  TODOS LOS CAMPOS DEBEN SER LLENADOS.
+    # obtengo la información ingresada por el usuario
     material = material_var.get()
     descripcion = descripcion_var.get()
     precio_venta = precio_venta_var.get()
@@ -205,9 +206,6 @@ def alta_registro():
     if not re.match(patron_entero, material):
         showerror("Error", "El material debe ser un número entero.")
         return
-    if not descripcion:
-        showerror("Error", "La descripción no puede estar vacía.")
-        return
     if not re.match(patron_precio, precio_venta):
         showerror("Error", "El precio de venta debe ser un número flotante.")
         return
@@ -216,9 +214,6 @@ def alta_registro():
         return
     if not re.match(patron_entero, stock):
         showerror("Error", "El stock debe ser un número entero.")
-        return
-    if not proveedor:
-        showerror("Error", "El proveedor no puede estar vacío.")
         return
 
     # conecto a la base de datos
@@ -344,8 +339,7 @@ def borrar_registro():
         # Cerrar la conexión a la base de datos
         conexion.close()
 
-    # borro los campo de entrada después de borrar el registro
-    entry1.delete(0, END)
+
 
 def modificar_registro():
     """
@@ -481,11 +475,11 @@ app = Tk()
 
 #VARIABLES
 material_var = StringVar(value="0")
-descripcion_var = StringVar()
+descripcion_var = StringVar(value="descripcion")
 precio_venta_var = StringVar(value="0")
 precio_costo_var = StringVar(value="0")
 stock_var = StringVar(value="0")
-proveedor_var = StringVar()
+proveedor_var = StringVar(value="proveedor")
 
 
 #############################################################################################
@@ -648,7 +642,7 @@ image = Image.open("1.JPG")
 image = image.resize((20, 20))
 photo = ImageTk.PhotoImage(image)
 image_label = Label(app, image=photo)
-image_label.image = photo  
+image_label.image = photo
 image_label.place(x=220, y=20)
 
 # label 2
