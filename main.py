@@ -317,7 +317,8 @@ def borrar_registro():
     #obtengo el elemento id del registro a borrar que fue seleccionado
     # luego lo guardo en una variable el campo material del registro a borrar
     item = tree.item(selection[0])
-    material_a_borrar = item['values'][1]
+    material_a_borrar = item['values'][0]
+    descripcion_del_material_borrado = item['values'][2]
 
     # contecto a la base de datos
     conexion = sqlite3.connect('basededatos.db')
@@ -325,14 +326,14 @@ def borrar_registro():
 
     try:
         # intento borrar el registro de la base de datos
-        cursor.execute("DELETE FROM materiales WHERE material = ?", (material_a_borrar,))
+        cursor.execute("DELETE FROM materiales WHERE id = ?", (material_a_borrar,))
         conexion.commit()
 
         # Borro el registro del treeview
         for item in tree.selection():
             tree.delete(item)
 
-        messagebox.showinfo("Borrar registro", f"Registro con material '{material_a_borrar}' eliminado correctamente.")
+        messagebox.showinfo("Borrar registro", f"Registro con numero del material {descripcion_del_material_borrado} con ID '{material_a_borrar}' eliminado correctamente.")
     except sqlite3.Error as e:
         messagebox.showerror("Error", f"No se pudo borrar el registro: {e}")
     finally:
@@ -535,7 +536,7 @@ app.config(menu=menubar)
 
 # Creo y coloco los widgets Entry y Label uno por uno
 #MATERIAL
-label1 = Label(app, text="MATERIAL", background="white")
+label1 = Label(app, text="NUMERO DE MATERIAL", background="white")
 label1.place(x=260, y=20)
 entry1 = Entry(app, textvariable=material_var)
 entry1.place(x=400, y=20)
