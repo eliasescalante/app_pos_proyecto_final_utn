@@ -605,6 +605,7 @@ button5.place(x=600, y=200)
 # TREEVIEW
 # donde se va a mostrar la previsualizacion de los datos
 tree = ttk.Treeview(app)
+tree['show'] = 'headings'
 
 # Columnas del Treeview
 tree["columns"] = ("0","1", "2", "3", "4", "5", "6")
@@ -688,3 +689,4 @@ image_label.place(x=220, y=170)
 
 # cierre de la app
 app.mainloop()
+
