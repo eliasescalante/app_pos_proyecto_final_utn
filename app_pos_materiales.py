@@ -629,7 +629,7 @@ tree.place(relx=0.5, y=480, anchor=S, relwidth=1)
 #IMAGENES
 
 # cargo la imagen y la agrego a una etiqueta
-image = Image.open("1.JPG")
+image = Image.open("img/1.JPG")
 image = image.resize((200, 150))
 photo = ImageTk.PhotoImage(image)
 image_label = Label(app, image=photo)
@@ -638,7 +638,7 @@ image_label.place(x=580, y=25)
 
 # cargo el logo en cada label
 #label 1
-image = Image.open("1.JPG")
+image = Image.open("img/1.JPG")
 image = image.resize((20, 20))
 photo = ImageTk.PhotoImage(image)
 image_label = Label(app, image=photo)
@@ -646,7 +646,7 @@ image_label.image = photo
 image_label.place(x=220, y=20)
 
 # label 2
-image = Image.open("1.JPG")
+image = Image.open("img/1.JPG")
 image = image.resize((20, 20))
 photo = ImageTk.PhotoImage(image)
 image_label = Label(app, image=photo)
@@ -654,7 +654,7 @@ image_label.image = photo
 image_label.place(x=220, y=50)
 
 # label 3
-image = Image.open("1.JPG")
+image = Image.open("img/1.JPG")
 image = image.resize((20, 20))
 photo = ImageTk.PhotoImage(image)
 image_label = Label(app, image=photo)
@@ -662,7 +662,7 @@ image_label.image = photo
 image_label.place(x=220, y=80)
 
 # label 4
-image = Image.open("1.JPG")
+image = Image.open("img/1.JPG")
 image = image.resize((20, 20))
 photo = ImageTk.PhotoImage(image)
 image_label = Label(app, image=photo)
@@ -670,7 +670,7 @@ image_label.image = photo
 image_label.place(x=220, y=110)
 
 # label 5
-image = Image.open("1.JPG")
+image = Image.open("img/1.JPG")
 image = image.resize((20, 20))
 photo = ImageTk.PhotoImage(image)
 image_label = Label(app, image=photo)
@@ -678,7 +678,7 @@ image_label.image = photo
 image_label.place(x=220, y=140)
 
 # label 6
-image = Image.open("1.JPG")
+image = Image.open("img/1.JPG")
 image = image.resize((20, 20))
 photo = ImageTk.PhotoImage(image)
 image_label = Label(app, image=photo)
