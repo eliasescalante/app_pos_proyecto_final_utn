@@ -2,6 +2,10 @@
 Aplicación de escritorio desarrollada con PYTHON para realizar un CRUD sobre una base de datos.
 También permite exportar la base y asi como tambien la consulta.
 
+Instalacion:
+Copiar todo el contenido de la carpeta DIST
+ejecutar main.exe
+
 DEV: Elias Escalante
 
 ----
