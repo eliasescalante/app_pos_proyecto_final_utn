@@ -111,7 +111,7 @@ def mostrar_ayuda():
     # Mensaje de ayuda 
     mensaje = """Esta es una aplicación realizada por ELIAS ESCALANTE  que muestra una maquetación básica de una interfaz gráfica utilizando Tkinter. 
     Puedes utilizar esta aplicación para gestionar una base de datos de materiales, donde puedes consultar, dar de alta, borrar y modificar registros.
-    Asi como tambien exportar la base de datos actual y exportar las consultas que hagas. 
+    Asi como también exportar la base de datos actual y exportar las consultas que hagas. 
     Con respecto a la aplicacion podes cambiar a modo oscuro o bien al modo clasico.
     Además tenes acceso a una ventana de salida para visualizar todas las operaciones realizadas. A tener en cuenta:
 
@@ -122,11 +122,11 @@ def mostrar_ayuda():
     5 - para exportar una consulta debes de realizarla primero y luego ir al menu y elegir "exportar consulta".
     6 - para exportar la base solo ve al menu y haz click en "exportar base"
 
-    derechos reservados a:
-    Elias Escalante
-    deguelelias@gmail.com
-    git del proyecto:
-    https://github.com/eliasescalante/app_proyecto_final_utn.git
+
+derechos reservados a:
+ELIAS ESCALANTE
+deguelelias@gmail.com
+GIT DEL PROYECTO: https://github.com/eliasescalante/app_pos_proyecto_final_utn.git
     """
     # Muestro el mensaje de ayuda en una ventana emergente
     messagebox.showinfo("Ayuda", mensaje)
