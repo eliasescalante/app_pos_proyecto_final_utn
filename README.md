@@ -12,4 +12,4 @@ DEV: Elias Escalante
 
 DIPLOMATURA EN PYTHON UTN.BA
 
-![Texto alternativo](https://github.com/eliasescalante/app_pos_proyecto_final_utn/blob/main/img/Capture_app.JPG)
+![Texto alternativo](https://github.com/eliasescalante/app_pos_proyecto_final_utn/blob/main/img/Capture_app_nueva.JPG)
