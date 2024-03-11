@@ -39,6 +39,7 @@ def crear_base_datos():
     """
 
     #genero un print si ya existe la base Y utilizo una estructura condicional para chequear esto
+    #uso el metodo path.exists() para  verificar si la ruta existe o no si da TRUE entonces hace el print
     if os.path.exists('basededatos.db'):
         print("la base ya existe")
         return
@@ -81,6 +82,8 @@ def exportar_base():
     print("Exportando base...")
 
     # Pido al usuario que seleccione la ubicación y el nombre del archivo
+    #utilizo el metodo filedialog.asksaveasfilename()  para elegir la ruta donde guardar el archivo
+    #por parametro paso la extension como defaul .txt
     file_path = filedialog.asksaveasfilename(defaultextension=".txt", filetypes=[("Archivos de texto", "*.txt")])
 
     #Utilizo una estructura condicional para verificar si el usuario selecciono un archivo para guardar.
@@ -188,7 +191,7 @@ def alta_registro():
     DE ERROR Y NO GUARDA NI UNO DE LOS DATOS INTRODUCIDOS.
     """
 
-    #  TODOS LOS CAMPOS DEBEN SER LLENADOS.
+    #  TODOS LOS CAMPOS DEBEN ESTAR COMPLETOS.
     # obtengo la información ingresada por el usuario
     material = material_var.get()
     descripcion = descripcion_var.get()
@@ -202,6 +205,7 @@ def alta_registro():
         messagebox.showerror("Error", "Por favor completa todos los campos")
         return
 
+    ########## REGEX ##############
     #defino los patrones en variables para tipiar menos codigo
     # No utilizo validacion para descripcion porque las diferentes marcas o nombres utilizan cualquier caracter
     patron_precio = "^\d+(\.\d+)?$"
@@ -220,6 +224,7 @@ def alta_registro():
     if not re.match(patron_entero, stock):
         showerror("Error", "El stock debe ser un número entero.")
         return
+    ####################################
 
     # conecto a la base de datos
     conexion = sqlite3.connect('basededatos.db')
@@ -269,7 +274,7 @@ def consultar_registro():
     REALIZA UNA CONSULTA  A LA TABLA DE MATERIALES EN LA BASE 
     DE DATOS PARA OBTENER TODOS LOS REGISTROS Y LOS AGREGA AL TREEVIEW
     SI NO SE COMPLETA LOS CAMPOS REQUERIDOS PARA REALIZAR LA CONSULTA 
-    EMITE UN MENSAJE EN UN SHOWWARNING PARA QUE SE COMPLETE ALGUN CRITERIO DE BUSQUEDA
+    EMITE UN MENSAJE EN UN SHOWWARNING PARA QUE SE COMPLETE ALGUN CRITERIO DE BUSQUEDA.
     EL CRITERIO DE BUSQUEDA VA A SER LA DESCRIPCION.
     """
 
@@ -279,10 +284,12 @@ def consultar_registro():
     # Conecto la base de datos
     conexion = sqlite3.connect('basededatos.db')
     cursor = conexion.cursor()
+    print("conectando a la base de datos...")
 
     # Realizo la consulta en función del texto ingresado con una estructura condicional elif
     if descripcion:
         cursor.execute("SELECT * FROM materiales WHERE descripcion LIKE ?", ('%' + descripcion + '%',))
+        print("se realizo la consulta")
     else:
         messagebox.showwarning("Consulta", "Debe ingresar un criterio de búsqueda (Descripción).")
         return
@@ -303,6 +310,7 @@ def consultar_registro():
 
     # Cierro la conexión
     conexion.close()
+    print("conexion cerrada...")
 
 
 def borrar_registro():
@@ -328,11 +336,13 @@ def borrar_registro():
     # contecto a la base de datos
     conexion = sqlite3.connect('basededatos.db')
     cursor = conexion.cursor()
+    print("conectando a la base de datos...")
 
     try:
         # intento borrar el registro de la base de datos
         cursor.execute("DELETE FROM materiales WHERE id = ?", (material_a_borrar,))
         conexion.commit()
+        print("registro borrado...")
 
         # Borro el registro del treeview
         for item in tree.selection():
@@ -344,6 +354,7 @@ def borrar_registro():
     finally:
         # Cerrar la conexión a la base de datos
         conexion.close()
+        print("conexion cerrada...")
 
 
 
@@ -417,6 +428,7 @@ def modificar_registro():
             # obtengo el registro modificado de la base de datos
             cursor.execute("SELECT * FROM materiales WHERE material = ?", (material,))
             registro_modificado = cursor.fetchone()
+            print("obteniendo informacion de la consulta...")
 
             # limpio el Treeview
             for record in tree.get_children():
@@ -424,6 +436,7 @@ def modificar_registro():
 
             # inserto el registro modificado en el Treeview
             tree.insert('', 'end', values=registro_modificado)
+            print("registro insertado...")
         else:
             messagebox.showerror("Error", f"No se encontró ningún registro para el material '{material}'.")
     except sqlite3.Error as e:
@@ -431,6 +444,7 @@ def modificar_registro():
     finally:
         # cierro la conexión
         conexion.close()
+        print("conexion cerrada...")
 
     # limpio los campos de entrada después de modificar el registro
     entry1.delete(0, END)
@@ -448,6 +462,7 @@ def limpiar_tree():
     # Limpio el Treeview utilizando una estructura repetitiva  For que recorre todos los hijos del nodo raiz
     for record in tree.get_children():
         tree.delete(record)
+        print("limpiando treeview...")
 
     # limpio los campos de entrada
     entry1.delete(0, END)
@@ -464,6 +479,7 @@ def modo_oscuro():
     CAMBIA EL FONDO DE LA APLICACION A GRIS
     """
     app.configure(background="grey")
+    print("cambio a modo oscuro...")
 
 
 def modo_clasico():
@@ -471,7 +487,7 @@ def modo_clasico():
     CAMBIA EL FONDO DE LA APLICACION A BLANCO QUE ES EL MODO ORIGINAL
     """
     app.configure(background="white")
-
+    print("cambio a modo clasico")
 
 
 #############################################################################################
