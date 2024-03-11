@@ -1,6 +1,8 @@
 import os
 import sqlite3
 
+#modifique la funcion para que pueda funcionar sin los get()
+#de esta forma pude testear esta funcion
 def crear_base_datos(nombre_bd):
     """
     Crea la base de datos si no existe.

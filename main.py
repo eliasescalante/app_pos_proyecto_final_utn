@@ -16,6 +16,11 @@ Descripcion:
     Tambien permite exportar la base de datos en .txt asi como también la consulta.
     Tambien se puede cambiar el color de fondo de la aplicacion con el modo oscuro y volver a su modo clásico
     Intente realizar una interfaz intuitiva y facil de usar.
+
+comentarios:
+    Para este proyecto no solo utilice lo visto en las clases si no que tambien  investigue sobre los metodos de TKINTER
+    asi como tambien la documentacion de SQLITE3, PIL, OS.
+    Aprendi mucho sobre los test y me di cuenta algunos temas muy importantes a mejorar.
 """
 
 

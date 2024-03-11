@@ -2,7 +2,7 @@ import sqlite3
 import pytest
 
 
-
+#de igual forma modifique la funcion para que pueda hacerse el test sin los get.
 def alta_registro(material, descripcion, precio_venta, precio_costo, stock, proveedor, nombre_bd='../basededatos.db'):
     """
     Inserta un nuevo registro en la base de datos.
@@ -41,7 +41,7 @@ def test_alta_registro():
     registro = cursor.fetchone()
     conexion.close()
 
-    # Verificar si se encontró el registro en la base de datos
+    # Verifico si se encontró el registro en la base de datos
     assert registro is not None
     assert registro[1] == material
     assert registro[2] == descripcion
