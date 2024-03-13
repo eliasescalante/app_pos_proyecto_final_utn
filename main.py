@@ -368,7 +368,14 @@ def modificar_registro():
     """
 
     # obtengo el material ingresado por el usuario
-    material = material_var.get()
+    id_seleccionado = tree.selection()
+
+    if id_seleccionado:
+        id_seleccionado = tree.item(id_seleccionado[0])['values'][0]
+        print("ID", id_seleccionado)
+    else:
+        messagebox.showerror("modificar", "debes seleccionar un registro")
+        return
 
     # obtengo los valores ingresados por el usuario para los otros campos
     descripcion = entry2.get()
@@ -377,11 +384,6 @@ def modificar_registro():
     stock = entry5.get()
     proveedor = entry6.get()
 
-    # valido que se haya ingresado un material
-    if not material:
-        messagebox.showwarning("Modificar registro", "Debe ingresar el material del registro que desea modificar.")
-        return
-
     # conecto a la base de datos
     conexion = sqlite3.connect('basededatos.db')
     cursor = conexion.cursor()
@@ -389,7 +391,7 @@ def modificar_registro():
 
     try:
         # verifico si el registro con el material proporcionado existe
-        cursor.execute("SELECT * FROM materiales WHERE material = ?", (material,))
+        cursor.execute("SELECT * FROM materiales WHERE id = ?", (id_seleccionado,))
         registro = cursor.fetchone()
 
         if registro:
@@ -397,7 +399,7 @@ def modificar_registro():
             sql = "UPDATE materiales SET"
             values = []
 
-            # agrego los campos que se van a modificar
+            # valido los diferentes campos si fueron ingresados para realizar el update a la base de datos
             if descripcion:
                 sql += " descripcion = ?,"
                 values.append(descripcion)
@@ -415,18 +417,18 @@ def modificar_registro():
                 values.append(proveedor)
 
             # elimino la última coma y cierro la consulta
-            sql = sql.rstrip(',') + " WHERE material = ?"
-            values.append(material)
+            sql = sql.rstrip(',') + " WHERE id = ?"
+            values.append(id_seleccionado)
 
             # ejecuto la consulta para actualizar el registro
             cursor.execute(sql, tuple(values))
             conexion.commit()
 
             #muestro un mensaje por pantalla si la modificacion del registro se realizo sin problemas
-            messagebox.showinfo("Modificar registro", f"Registro con material '{material}' modificado correctamente.")
+            messagebox.showinfo("Modificar registro", f"Registro con id '{id_seleccionado}' modificado correctamente.")
 
             # obtengo el registro modificado de la base de datos
-            cursor.execute("SELECT * FROM materiales WHERE material = ?", (material,))
+            cursor.execute("SELECT * FROM materiales WHERE id = ?", (id_seleccionado,))
             registro_modificado = cursor.fetchone()
             print("obteniendo informacion de la consulta...")
 
@@ -438,7 +440,7 @@ def modificar_registro():
             tree.insert('', 'end', values=registro_modificado)
             print("registro insertado...")
         else:
-            messagebox.showerror("Error", f"No se encontró ningún registro para el material '{material}'.")
+            messagebox.showerror("Error", f"No se encontró ningún registro para el material con id'{id_seleccionado}'.")
     except sqlite3.Error as e:
         messagebox.showerror("Error", f"No se pudo modificar el registro: {e}")
     finally:
