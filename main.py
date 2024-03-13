@@ -125,7 +125,7 @@ def mostrar_ayuda():
 
     1 - para borrar un registro debes realizar un consulta primero luego seleccionarlo en el treeview y luego presionar el boton de borrar.
     2 - para consultar podes buscar por descripcion y luego presionar el boton consultar.
-    3 - para modificar debes conocer el numero de material y se debe completar todos los campos del registro. primero realizar una consulta para conocer el numero de material
+    3 - para modificar primero realizar una consulta, luego seleccionar el registro del treeview y en los campos completar aquellos que quieras modificar. luego presionar "MODIFICAR"
     4 - para el alta debes completar todos los campos, respetando los criterios de cada uno. Luego presionas el boton de Alta
     5 - para exportar una consulta debes de realizarla primero y luego ir al menu y elegir "exportar consulta".
     6 - para exportar la base solo ve al menu y haz click en "exportar base"
@@ -360,11 +360,11 @@ def borrar_registro():
 
 def modificar_registro():
     """
-    MODIFICA UNO O VARIOS CAMPOS DE UN REGISTRO BASANDOSE EN EL NUMERO DE MATERIAL
-    SE DEBE COMPLETAR TODOS LOS CAMPOS
+    MODIFICA UNO O VARIOS CAMPOS DE UN REGISTRO BASANDOSE EN EL NUMERO DE ID
+    SE DEBE COMPLETAR LOS CAMPOS QUE SE QUIERAN MODIFICAR
     EMITE UN MENSAJE  SI NO SE HA SELECCIONADO NINGUN REGISTRO Y PARA MODIFICAR
     EMITE UN MENSAJE SI SE MODIFICO EL REGISTRO
-    EMITE MENSAJE SI OCURRE UN ERROR DEL TIPO NO EXISTE EL REGISTRO O  CAMPOS INCOMPLETOS
+    EMITE MENSAJE SI OCURRE UN ERROR DEL TIPO NO EXISTE EL REGISTRO O NO SE COMPLETO NINGUN CAMPO
     """
 
     # obtengo el material ingresado por el usuario
@@ -459,6 +459,7 @@ def modificar_registro():
 def limpiar_tree():
     """
     LIMPIA EL TREEVIEWW DE TODA LA INFO QUE ESTE EN EL MOMENTO
+    TAMBIEN LIMPIA LOS ENTRY DEL FORMULARIO
     """
 
     # Limpio el Treeview utilizando una estructura repetitiva  For que recorre todos los hijos del nodo raiz
