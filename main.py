@@ -65,6 +65,25 @@ def crear_base_datos():
     # genero un print para chequear en consola que se creo la base
     print("base creada")
 
+def limpiar_tree():
+    """
+    LIMPIA EL TREEVIEWW DE TODA LA INFO QUE ESTE EN EL MOMENTO
+    TAMBIEN LIMPIA LOS ENTRY DEL FORMULARIO
+    """
+
+    # Limpio el Treeview utilizando una estructura repetitiva  For que recorre todos los hijos del nodo raiz
+    for record in tree.get_children():
+        tree.delete(record)
+        print("limpiando treeview...")
+
+    # limpio los campos de entrada
+    entry1.delete(0, END)
+    entry2.delete(0, END)
+    entry3.delete(0, END)
+    entry4.delete(0, END)
+    entry5.delete(0, END)
+    entry6.delete(0, END)
+
 
 def exportar_base():
     """
@@ -295,8 +314,7 @@ def consultar_registro():
         return
 
     # Limpio el treeview antes de agregar los nuevos datos
-    for record in tree.get_children():
-        tree.delete(record)
+    limpiar_tree()
 
     #agrego los resultados a la variable registro
     registro =  cursor.fetchall()
@@ -378,11 +396,12 @@ def modificar_registro():
         return
 
     # obtengo los valores ingresados por el usuario para los otros campos
-    descripcion = entry2.get()
-    precio_venta = entry3.get()
-    precio_costo = entry4.get()
-    stock = entry5.get()
-    proveedor = entry6.get()
+    material = material_var.get()
+    descripcion = descripcion_var.get()
+    precio_venta = precio_venta_var.get()
+    precio_costo = precio_costo_var.get()
+    stock = stock_var.get()
+    proveedor = proveedor_var.get()
 
     # conecto a la base de datos
     conexion = sqlite3.connect('basededatos.db')
@@ -394,12 +413,17 @@ def modificar_registro():
         cursor.execute("SELECT * FROM materiales WHERE id = ?", (id_seleccionado,))
         registro = cursor.fetchone()
 
+        # si se valido el registro se realiza la consulta
         if registro:
             # realizo la consulta SQL para actualizar el registro
             sql = "UPDATE materiales SET"
             values = []
 
-            # valido los diferentes campos si fueron ingresados para realizar el update a la base de datos
+            # valido los diferentes campos si fueron ingresados
+            #dependiendo el campo que fue ingresado si da True entonces se hara el update de ese campo
+            if material:
+                sql += " material = ?,"
+                values.append(material)
             if descripcion:
                 sql += " descripcion = ?,"
                 values.append(descripcion)
@@ -433,8 +457,7 @@ def modificar_registro():
             print("obteniendo informacion de la consulta...")
 
             # limpio el Treeview
-            for record in tree.get_children():
-                tree.delete(record)
+            limpiar_tree()
 
             # inserto el registro modificado en el Treeview
             tree.insert('', 'end', values=registro_modificado)
@@ -456,24 +479,6 @@ def modificar_registro():
     entry5.delete(0, END)
     entry6.delete(0, END)
 
-def limpiar_tree():
-    """
-    LIMPIA EL TREEVIEWW DE TODA LA INFO QUE ESTE EN EL MOMENTO
-    TAMBIEN LIMPIA LOS ENTRY DEL FORMULARIO
-    """
-
-    # Limpio el Treeview utilizando una estructura repetitiva  For que recorre todos los hijos del nodo raiz
-    for record in tree.get_children():
-        tree.delete(record)
-        print("limpiando treeview...")
-
-    # limpio los campos de entrada
-    entry1.delete(0, END)
-    entry2.delete(0, END)
-    entry3.delete(0, END)
-    entry4.delete(0, END)
-    entry5.delete(0, END)
-    entry6.delete(0, END)
 
 
 
@@ -663,7 +668,7 @@ image_label.image = photo
 image_label.place(x=580, y=25)
 
 # cargo el logo en cada label
-#label 1
+#label 1 - item 1
 image = Image.open("img/1.JPG")
 image = image.resize((20, 20))
 photo = ImageTk.PhotoImage(image)
@@ -671,7 +676,7 @@ image_label = Label(app, image=photo)
 image_label.image = photo
 image_label.place(x=220, y=20)
 
-# label 2
+# label 2 - item 2
 image = Image.open("img/1.JPG")
 image = image.resize((20, 20))
 photo = ImageTk.PhotoImage(image)
@@ -679,7 +684,7 @@ image_label = Label(app, image=photo)
 image_label.image = photo 
 image_label.place(x=220, y=50)
 
-# label 3
+# label 3 - item 3
 image = Image.open("img/1.JPG")
 image = image.resize((20, 20))
 photo = ImageTk.PhotoImage(image)
@@ -687,7 +692,7 @@ image_label = Label(app, image=photo)
 image_label.image = photo  
 image_label.place(x=220, y=80)
 
-# label 4
+# label 4 - item 4
 image = Image.open("img/1.JPG")
 image = image.resize((20, 20))
 photo = ImageTk.PhotoImage(image)
@@ -695,7 +700,7 @@ image_label = Label(app, image=photo)
 image_label.image = photo  
 image_label.place(x=220, y=110)
 
-# label 5
+# label 5 - item 5
 image = Image.open("img/1.JPG")
 image = image.resize((20, 20))
 photo = ImageTk.PhotoImage(image)
@@ -703,7 +708,7 @@ image_label = Label(app, image=photo)
 image_label.image = photo  
 image_label.place(x=220, y=140)
 
-# label 6
+# label 6 - item 6
 image = Image.open("img/1.JPG")
 image = image.resize((20, 20))
 photo = ImageTk.PhotoImage(image)
