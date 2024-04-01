@@ -1,12 +1,11 @@
-# app_proyecto_final_utn 
-DIPLOMATURA EN PYTHON UTN.BA
+# proyecto_app_pos
 DEV: Elias Escalante
 
 DESCRIPCION:
 Aplicación de escritorio desarrollada con PYTHON para realizar un CRUD sobre una base de datos.
-También permite exportar la base y asi como tambien la consulta.
+También permite exportar la base y asi como también la consulta.
 
-Instalacion:
+Instalación:
 Copiar todo el contenido de la carpeta DIST
 ejecutar main.exe
 
